@@ -130,6 +130,7 @@ $(document).ready(function() {
 		columns: [
 			{ title: '<input type="checkbox" class="checkheader" value="" >', orderable:false,  data: "id", render : function(data, type, row) { return '<input type="checkbox" class="checkitem" value="'+row.id+'" >'; } },
 			{ title: '#',  data: "id", orderable:false },
+			{ title: "Company Type",  data: "company_type" },
 			{ title: "Company Name",  data: "company_name" },
 			{ title: "Email",  data: "email" },
 			{ title: "Contact Name",  data: "contact_person" },

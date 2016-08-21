@@ -21,7 +21,7 @@ class Admin extends CI_Controller {
         	$this->load->view('admin-login');
         }
 		else {
-			redirect(base_url().'admin/dashboard');
+			redirect(base_url().'dashboard');
 		}
 	}
 	
@@ -121,6 +121,8 @@ class Admin extends CI_Controller {
 		{
 			$locations=$this->getLocation();
 			$locations=array_column($locations,"name","id");
+			$companyType=$this->getCompanyType();
+			$companyType=array_column($companyType,"name","id");
 			$list=array();
 			foreach($record as $row)
 			{
@@ -149,8 +151,9 @@ class Admin extends CI_Controller {
 					$row['status_code'] = 'Deleted';
 				}
 				$row['city'] = $locations[$row['city']];
+				$row['company_type'] = $companyType[$row['company_type']];
+				$row['company_type'];
 				unset($row['password']);
-				unset($row['company_type']);
 				unset($row['about_company']);
 				unset($row['company_emplyees']);
 				unset($row['industry']);
@@ -213,6 +216,12 @@ class Admin extends CI_Controller {
 		$this->_loadAdminView('employer-signup',$data);
 	}
 	
+	private function _deleteFile($fileName)
+	{
+		if(file_exists($fileName))
+			unlink($fileName);
+	}
+	
 	public function create_employee()
 	{
 		$config = array(
@@ -236,8 +245,46 @@ class Admin extends CI_Controller {
 				array( 'field' => 'conf_password','label' => 'Password', 'rules'=> 'trim|required|xss_clean' )
 			);
 		}
+		
+		$isFileUpload = false;
+		$error = '';
+		if(!empty(trim($_FILES['company_logo']['name'])))
+		{
+			$isFileUpload = true;
+			if($_FILES['company_logo']['error'] > 0)
+				$error = 'File upload failed. Please check the file and retry.';
+			else
+			{
+				//set filename in config for upload
+				$FileName = $_FILES['company_logo']['name'];
+				$name_arr=explode(".", $FileName);
+				$FileName = "logo_".time()."_".$name_arr[0];
+				$configFileUpload=array();
+				$configFileUpload['file_name'] = $FileName;
+				$configFileUpload['upload_path'] = './upload/logo/';
+				$configFileUpload['allowed_types'] = 'gif|jpg|png';
+				$configFileUpload['max_size']	= '512';
+				$this->load->library('upload', $configFileUpload);
+				if( ! $this->upload->do_upload('company_logo') )
+					$error = $this->upload->display_errors();
+				$companyLogo = $this->upload->data();
+				if($error == '' && $companyLogo['is_image'] == 1)
+				{
+					unset($_POST['company_logo']);
+					$_POST['logo']=$companyLogo['file_name'];
+				}
+				else
+				{
+					$this->_deleteFile($companyLogo['full_path']);
+					$error = 'File upload failed. Please check the file and retry.';
+				}
+			}
+		}
+		
+		
+		
 		$this->form_validation->set_rules($config);
-		if ($this->form_validation->run() == FALSE)
+		if ($this->form_validation->run() == FALSE || ($isFileUpload == true && $error != ''))
 		{
 			$this->form_validation->set_error_delimiters('<div class="alert alert-danger text-center"><button type="button" class="close" data-dismiss="alert">&times;</button>', '</div>');
 			$data=array();
@@ -246,6 +293,7 @@ class Admin extends CI_Controller {
 			$locations=array_column($data['location_array'],"state_id","id");
 			$data['employer'][0]['state'] = $locations[$data['employer'][0]['city']];
 			$data['addBy']='admin';
+			$data['fileUploadError'] = $error;
 			$this->_loadAdminView('employer-signup',$data);
 		}
 		elseif(!empty($_POST))
@@ -253,8 +301,15 @@ class Admin extends CI_Controller {
 			$data = $this->input->post();
 			unset($data['state']);
 			unset($data['conf_password']);
-			$data['password'] = $this->encrypt->encode($data['password']);
+			if($data['password'] != '')
+				$data['password'] = $this->encrypt->encode($data['password']);
+			else
+				unset($data['password']);
+			$data['premium_employer'] = isset($data['premium_employer']) ? 1 : 0;
 			$data['mode'] =trim($data['mode']);
+			$logoPath = '';
+			if(isset($data['id']) && $isFileUpload == true)
+				$logoPath = $this->Employer_model->get_logo($data['id']);
 			$success=$this->Employer_model->add_update($data);
 			if($success>0)
 			{
@@ -265,6 +320,8 @@ class Admin extends CI_Controller {
 				}
 				else
 				{
+					if($logoPath != '')
+						$this->_deleteFile($companyLogo['file_path'].$logoPath);
 				 	$this->session->set_flashdata('msg', '<div class="alert alert-success text-center">Employer updated successfully!</div>');
 					redirect(base_url().'admin/viewemployerprofile/'.$data['id']);
 				}
@@ -278,7 +335,7 @@ class Admin extends CI_Controller {
 				}
 				else
 				{
-					$this->session->set_flashdata('msg', '<div class="alert alert-danger text-center">Sorry, Employer Updated Failed!</div>');
+					$this->session->set_flashdata('msg', '<div class="alert alert-danger text-center">Sorry, update failed. No changes are made on Employer details.</div>');
 					redirect(base_url().'admin/viewemployerprofile/'.$data['id']);
 				}
 			}
@@ -356,12 +413,10 @@ class Admin extends CI_Controller {
 
 	public function postjob()
 	{
-		$this->_checkAdmin();
+		#$this->_checkAdmin();
 
 		$data=array();
 		$data=$this->getMasterData(array('country','location','state','education','job_type','industry','functional','skills'));
-		
-		$data['json_skills'] = json_encode($data['skills']);
 		
 		$master_data=array();
 		$master_data['table_name']='employer';
@@ -369,16 +424,27 @@ class Admin extends CI_Controller {
 		$data['employers']=$this->Common_model->get_master($master_data);
 		
 	  	$job_id = $this->uri->segment(3, 0);
-		if($job_id >0){
+		if($job_id > 0){
 			$master_data=array();
 			$master_data['table_name']='job';
 			$master_data['where']=' id='.$job_id;
 			$data['job']=$this->Common_model->get_master($master_data);
+			$jobID = $data['job'][0]['id'];
+			$skillsIDs = $this->Job_model->get_skills_by_jobId(array($jobID));
+			$educationIDs = $this->Job_model->get_education_by_jobId(array($jobID));
+			$data['job'][0]['skills']=$skillsIDs[$jobID];
+			$data['job'][0]['education']=$educationIDs[$jobID];
 		}
 
 		$data['update_url'] = base_url().'admin/jobadd_update';
 		$data['addBy']='admin';
-		$this->_loadAdminView('postjob',$data);
+		if(isset($this->session->userdata['loggedin_admin'])) {
+			$this->_loadAdminView('postjob',$data);
+        }else{
+			$data['header']=$this->load->view('includes/header', $data, true);
+			$data['footer']=$this->load->view('includes/footer', $data, true);
+			$this->load->view("postjob",$data);
+		}
 	}
 	
 	public function jobadd_update()
@@ -389,25 +455,74 @@ class Admin extends CI_Controller {
 		$responseData['data']=array();
 		$sendData=array();
 		$status=$msg=$data='';
-		if(!empty($_POST))
+		
+		$config = array(
+		   array( 'field' => 'job_type_id', 'label' => 'Job type id', 'rules' => 'trim|required|xss_clean' ),
+		   array( 'field' => 'employer_id', 'label' => 'employer id', 'rules' => 'trim|required|xss_clean' ),
+		   array( 'field' => 'job_title', 'label' => 'job title', 'rules' => 'trim|required|xss_clean' ),
+		   array( 'field' => 'job_desc', 'label' => 'job desc', 'rules' => 'trim|required|xss_clean' ),
+		   array( 'field' => 'job_industry_id', 'label' => 'job industry id', 'rules' => 'trim|required|xss_clean' ),
+		   array( 'field' => 'job_functional_id', 'label' => 'job functional id', 'rules' => 'trim|required|xss_clean' ),
+		   array( 'field' => 'job_no_postition', 'label' => 'job no postition', 'rules' => 'trim|required|xss_clean' ),
+		   array( 'field' => 'job_education_spe', 'label' => 'Education', 'rules' => 'trim|required|xss_clean' ),
+		   array( 'field' => 'job_key_skill[]', 'label' => 'job key skill', 'rules' => 'trim|required|xss_clean' ),
+		   array( 'field' => 'job_education_id[]', 'label' => 'Education Specifications', 'rules' => 'trim|required|xss_clean' ),
+		   array( 'field' => 'job_experience_from', 'label' => 'job experience from', 'rules' => 'trim|xss_clean' ),
+		   array( 'field' => 'job_experience_to', 'label' => 'job experience to', 'rules' => 'trim|xss_clean' ),
+		   array( 'field' => 'job_salary_from', 'label' => 'job salary from', 'rules' => 'trim|xss_clean' ),
+		   array( 'field' => 'job_salary_to', 'label' => 'job salary to', 'rules' => 'trim|xss_clean' ),
+		   array( 'field' => 'job_gender_id', 'label' => 'job gender id', 'rules' => 'trim|required|xss_clean' ),
+		   array( 'field' => 'job_country_id', 'label' => 'job country id', 'rules' => 'trim|required|xss_clean' ),
+		   array( 'field' => 'job_state_id', 'label' => 'job state id', 'rules' => 'trim|required|xss_clean' ),
+		   array( 'field' => 'job_location_id', 'label' => 'job location id', 'rules' => 'trim|required|xss_clean' ),
+		   array( 'field' => 'job_status', 'label' => 'job status', 'rules' => 'trim|required|xss_clean' ),
+		   array( 'field' => 'editId', 'label' => 'editId', 'rules' => 'trim|required|xss_clean' )
+		   //array( 'field' => 'premium_jobs', 'label' => 'premium jobs', 'rules' => 'trim|required|xss_clean' )
+		);
+		$this->form_validation->set_rules($config);
+		if ($this->form_validation->run() == FALSE)
 		{
-			$_POST['table_name'] ='job';
-
-			foreach ($_POST as $key => $value)
+			$responseData['msg']=validation_errors();
+		}
+		elseif(!empty($_POST))
+		{
+			$data=$this->input->post();
+			$data['table_name'] ='job';
+			foreach ($data as $key => $value)
 			{
-				$_POST[$key] = clean($value);
+				$data[$key] = clean($value);
 			}
-			if(@$_POST['mode']=='create')
+			if(@$data['mode']=='create')
 			{
-				$_POST['employer_id'] = @(isset($_POST['employer_id'])) ? $_POST['employer_id'] : $this->session->userdata['loggedin_employer']['id'];
-				$_POST['post_date'] = currentGMT('datetime');
+				$data['employer_id'] = @(isset($data['employer_id'])) ? $data['employer_id'] : $this->session->userdata['loggedin_employer']['id'];
+				$data['post_date'] = currentGMT('datetime');
 			}
-			unset($_POST['job_country_id']);
-			$success=$this->Common_model->add_update($_POST);
+			$job_key_skills = $data['job_key_skill'];
+			$job_education_id = $data['job_education_id'];
+			unset($data['job_key_skill']);
+			unset($data['job_education_id']);
+			unset($data['job_country_id']);
+			unset($data['job_state_id']);
+			$success=$this->Common_model->add_update($data);
 			if($success>0)
 			{
+				$jobId = (isset($data['editId']) && $data['editId'] > 0) ? $data['editId'] : $success;
+				$mappingData = array();
+				$mappingData['table_name'] = 'job_education_mapping';
+				$mappingData['primary_id'] = 'job_id';
+				$mappingData['primary_value'] = $jobId;
+				$mappingData['education_id'] = $job_education_id;
+				$this->Common_model->mappingTable($mappingData);
+				
+				$mappingData = array();
+				$mappingData['table_name'] = 'job_skills_mapping';
+				$mappingData['primary_id'] = 'job_id';
+				$mappingData['primary_value'] = $jobId;
+				$mappingData['skills_id'] = $job_key_skills;
+				$this->Common_model->mappingTable($mappingData);
+				
 				$responseData['status']=AJAX_SUCCESS;
-				if($_POST['mode']=='create')
+				if($data['mode']=='create')
 				{
 					$responseData['msg']='Job saved successfully!';
 				}else
@@ -416,7 +531,7 @@ class Admin extends CI_Controller {
 				}
 			}else
 			{ 
-				if($_POST['mode']=='create')
+				if($data['mode']=='create')
 				{
 				$responseData['msg']='Job save failed!';
 				}else
@@ -681,17 +796,14 @@ class Admin extends CI_Controller {
 		return $this->Common_model->get_master($master_data);
 	}
 	
-	public function location()
+	public function getCompanyType($companyType=0)
 	{
-		$record=$this->getLocation();
-		$list=array();
-		foreach($record as $row)
-		{
-			$row['status_class']=($row['status']==1)?'green':'grey';
-			$list[]=$row;
-		}
-		$data['list']=json_encode($list);
-		$this->_loadAdminView('location-master',$data);
+		$data=array();
+		$master_data=array();
+		$master_data['table_name']='company_type';
+		if($companyType > 0)
+			$master_data['where']=' id = '.$companyType;
+		return $this->Common_model->get_master($master_data);
 	}
 	
 	public function education()
@@ -746,6 +858,24 @@ class Admin extends CI_Controller {
 		$this->_loadAdminView('industry-master',$data);
 	}
 
+	
+	public function skillset()
+	{
+		$data=array();
+		$master_data=array();
+		$master_data['table_name']='skills';
+		$master_data['where']=' status <> 3';
+		$record=$this->Common_model->get_master($master_data);
+		$list=array();
+		foreach($record as $row)
+		{
+			$row['status_class']=($row['status']==1)?'green':'grey';
+			$list[]=$row;
+		}
+		$data['list']=json_encode($list);
+		$this->_loadAdminView('skills-master',$data);
+	}
+
 	public function country()
 	{
 		$data=array();
@@ -762,6 +892,48 @@ class Admin extends CI_Controller {
 		$data['list']=json_encode($list);
 		$this->_loadAdminView('country-master',$data);
 	}
+
+	public function state()
+	{
+		$data=array();
+		$master_data=array();
+		$master_data['table_name']='country';
+		$master_data['where']=' status = 1 ';
+		$data['country']=$this->Common_model->get_master($master_data);
+		
+		$master_data=array();
+		$master_data['table_name']='state';
+		$master_data['where']=' status <> 3';
+		$record=$this->Common_model->get_master($master_data);
+		
+		$countries = array_column($data['country'], "name","id");
+		$list=array();
+		foreach($record as $row)
+		{
+			$row['country_name']=$countries[$row['country_id']];
+			$row['status_class']=($row['status']==1)?'green':'grey';
+			$list[]=$row;
+		}
+		$data['list']=json_encode($list);
+		$this->_loadAdminView('state-master',$data);
+	}
 	
+	public function location()
+	{
+		$master_data=array();
+		$master_data['table_name']='state';
+		$master_data['where']=' status = 1 ';
+		$data['state']=$this->Common_model->get_master($master_data);
+	
+		$record=$this->getLocation();
+		$list=array();
+		foreach($record as $row)
+		{
+			$row['status_class']=($row['status']==1)?'green':'grey';
+			$list[]=$row;
+		}
+		$data['list']=json_encode($list);
+		$this->_loadAdminView('location-master',$data);
+	}
 }
 ?>

@@ -47,6 +47,7 @@
 </div>
 <div class="clearfix">&nbsp;</div>
 <div class="row">
+	<div class="col-md-12 message-div"></div>
 	<div class="col-md-12">
 		<table id="example" class="table table-striped" width="100%"></table>
 	</div>
@@ -77,7 +78,10 @@ $(document).ready(function() {
 			{ title: "Status",  data: "status_str", className:"text-center", visible:false },
 			{ title: "Status",  data: "status_str", className:"text-center", render : function(data, type, row) { return '<a title ="'+row.status_str+'" class="glyphicon glyphicon-stop '+row.status_class+' tool-tip"></a>'; } },
 			{ title: "Manage", orderable:false,  data: "id", render : function(data, type, row) { return '<a data-toggle="tooltip" data-placement="left" title="Edit" href="'+base_url+'admin/postjob/'+row.id+'/"  class="glyphicon glyphicon-edit btn btn-primary btn-action"></a><a onclick="delete_job('+row.id+')" data-toggle="tooltip" data-placement="right" title="Remove" class="glyphicon glyphicon-remove btn btn-danger btn-action"></a>'; } }
-		]
+		],
+		"createdRow": function( row, data, dataIndex ) {
+			$(row).attr("id", 'job_row_'+data.id );
+ 		}
 	} );
 	
 	DT.on( 'order.dt search.dt', function () {

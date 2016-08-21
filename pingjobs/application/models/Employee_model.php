@@ -9,6 +9,7 @@ class Employee_model extends CI_Model
     {
         // Call the Model constructor
         parent::__construct();
+		$this->load->library('encrypt');
     }
 
     public function get_emplyee_automail()
@@ -74,7 +75,7 @@ class Employee_model extends CI_Model
         {
             $result=$query->row_array();
             $data['user_hash'] = $result['employee_password'];
-            $data['user_pass'] = $data['employee_password'];
+            $data['user_pass'] = $this->encrypt->decode($data['employee_password']);
             //if(compare_lsa_pass($data))
             if($data['user_hash'] == $data['user_pass'])
             {

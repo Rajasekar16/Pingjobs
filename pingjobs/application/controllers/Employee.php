@@ -278,8 +278,8 @@ class Employee  extends CI_Controller {
 		$responseData['data']=array();
 		$sendData=array();
 		$status=$msg=$data='';
-		$sendData['employee_email']=$_POST['employee_email'];
-		$sendData['employee_password']=$_POST['employee_password'];
+		$sendData['employee_email']=$this->input->post('employee_email');
+		$sendData['employee_password']=$this->input->post('employee_password');
 		$result = $this->Employee_model->verify_login($sendData);
 		if(!empty($result))
 		{

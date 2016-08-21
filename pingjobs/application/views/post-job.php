@@ -44,7 +44,7 @@
                   <div class="form-group">
                     <label class="col-md-4 control-label" for="textinput">Job title/ Description</label>  
                     <div class="col-md-8">
-                    <input id="textinput" name="textinput" type="text" data-role="tagsinput" placeholder="Enter Job Description" class="form-control input-md" required="">
+                    <input id="textinput" name="textinput" type="text" data-role="tagsinput" placeholder="Enter Job Description" class="form-control input-md" required="required">
                       
                     </div>
                   </div>
@@ -62,7 +62,7 @@
                   <div class="form-group">
                     <label class="col-md-4 control-label" for="keyskills">Key Skills</label>  
                     <div class="col-md-8">
-                    <input id="keyskills" name="textinput" type="text" data-role="tagsinput" placeholder="Key Skills" class="form-control input-md" required="">
+                    <input id="keyskills" name="textinput" type="text" data-role="tagsinput" placeholder="Key Skills" class="form-control input-md" required="required">
                     </div>
                   </div>
 
@@ -92,11 +92,11 @@
                   <div class="form-group">
                     <label class="col-md-4 control-label" for="textinput">Experience</label>  
                     <div class="col-md-3">
-                    <input id="textinput" name="textinput" type="text" placeholder="Min Exp" class="form-control input-md" required="">
+                    <input id="textinput" name="textinput" type="text" placeholder="Min Exp" class="form-control input-md" required="required">
                     </div>
                     <label class="col-md-2 control-label" for="textinput">To</label>
                     <div class="col-md-3">
-                    <input id="textinput" name="textinput" type="text" placeholder="Max Exp" class="form-control input-md" required="">
+                    <input id="textinput" name="textinput" type="text" placeholder="Max Exp" class="form-control input-md" required="required">
                     </div>
                   </div>
 
@@ -108,18 +108,18 @@
                   <div class="form-group">
                     <label class="col-md-4 control-label" for="textinput">Salary</label>  
                     <div class="col-md-3">
-                    <input id="textinput" name="textinput" type="text" placeholder="Min Anual" class="form-control input-md" required="">
+                    <input id="textinput" name="textinput" type="text" placeholder="Min Anual" class="form-control input-md" required="required">
                     </div>
                     <label class="col-md-2 control-label" for="textinput">To</label>
                     <div class="col-md-3">
-                    <input id="textinput" name="textinput" type="text" placeholder="Max Anual" class="form-control input-md" required="">
+                    <input id="textinput" name="textinput" type="text" placeholder="Max Anual" class="form-control input-md" required="required">
                     </div>
                   </div>
 
                  <div class="form-group">
                     <label class="col-md-4 control-label" for="radios">No of Postitions</label>
                     <div class="col-md-8"> 
-                      <input id="textinput" name="textinput" type="text" placeholder="No of Postitions" class="form-control input-md" required="">
+                      <input id="textinput" name="textinput" type="text" placeholder="No of Postitions" class="form-control input-md" required="required">
                     </div>
                   </div>
 
@@ -137,7 +137,7 @@
 
                 <!-- Text input-->
                 <div class="form-group">
-                  <label class="col-md-4 control-label" for="textinput">Job Location/ State</label>  
+                  <label class="col-md-4 control-label" for="textinput">Job Location / State</label>  
                   <div class="col-md-8">
                     <select id="selectbasic" name="selectbasic" class="form-control">
                       <option value="1">Select State</option>
@@ -172,7 +172,7 @@
                 <div class="col-md-12">
                   <div>
                     <div class="col-md-2"></div>  
-                    <input type="checkbox" name="terms" id="terms" value="2"> We agree to the <a>Terms of Use</a> & <a>Privacy Policy</a>
+                    <input type="checkbox" name="terms" id="terms" value="2"> We agree to the <a>Terms of Use</a> &amp; <a>Privacy Policy</a>
                   </div>
               </div>
 

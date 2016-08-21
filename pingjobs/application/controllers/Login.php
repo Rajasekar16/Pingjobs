@@ -18,24 +18,64 @@ class Login extends CI_Controller {
 	 * map to /index.php/welcome/<method_name>
 	 * @see http://codeigniter.com/user_guide/general/urls.html
 	 */
+	public function __construct()
+	{
+        // Call the Model constructor
+        parent::__construct();
+		$this->load->model('Common_model');
+		$this->load->model('Job_model');
+	}
+	
 	public function index()
 	{
-		$this->load->model('Common_model');
 		$data=array();
 		$master_data=array();
 		$master_data['table_name']='location';
 		$master_data['where']=' status=1 ';
 		$data['location']=$this->Common_model->get_master($master_data);
 		
-		//To get the industry / Category
+		//To get the employer
 		$master_data=array();
-		$master_data['table_name']='industry';
-		$master_data['where']=' status=1 ';
-		$data['industry']=$this->Common_model->get_master($master_data);
+		$master_data['table_name']='employer';
+		$master_data['where']=' status=1 AND premium_employer = 1 ';
+		$data['employer']=$this->Common_model->get_master($master_data);
+		
+		//To get the employer
+		$master_data=array();
+		$master_data['premium_jobs']=' premium_jobs = 1';
+		$data['jobs']=$this->Job_model->get_jobs($master_data);
 
 		$data['header']=$this->load->view('includes/header', $data, true);
 		$data['top_search']=$this->load->view('includes/top-search', $data, true);
 		$data['footer']=$this->load->view('includes/footer', $data, true);
 		$this->load->view('login',$data);
+	}
+	
+	public function subscribe()
+	{
+		$config = array(
+		   array( 'field' => 'subscribe_email', 'label' => 'Email ID', 'rules' => 'trim|required|valid_email|xss_clean|is_unique[subscriber.email_id]' ),
+		);
+		$this->form_validation->set_message('is_unique', 'Email ID already exists');
+		$this->form_validation->set_rules($config);
+		if ($this->form_validation->run() == FALSE)
+		{
+			$this->session->set_flashdata('msg', '<div class="alert-danger text-center">'.validation_errors().'</div>');
+			redirect(base_url().'login');
+		}
+		elseif(isset($_POST['subscribe_email']))
+		{
+			$subscribeEmail=$this->input->post('subscribe_email');
+			$data=array();
+			$data['mode']="create";
+			$data['table_name']='subscriber';
+			$data['email_id']=$subscribeEmail;
+			if($this->Common_model->add_update($data) > 0)
+			{
+				$this->session->set_flashdata('msg', '<div class="alert-success text-center">Subscribed successfully!</div>');
+				redirect(base_url().'login');
+			}
+		}
+		redirect(base_url().'login');
 	}
 }

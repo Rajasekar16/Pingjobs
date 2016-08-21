@@ -13,34 +13,7 @@
 
 		<title>Ping Jobs - Admin</title>
 
-		<!-- Bootstrap core CSS -->
-		<link href="<?php echo SITE_URL;?>css/bootstrap.css" rel="stylesheet">
-	
-		<!-- Custom styles for this template -->
-		<link href="<?php echo SITE_URL;?>css/ping.css" rel="stylesheet">
-		<link href="<?php echo SITE_URL;?>css/plugin.css" rel="stylesheet">
-		<link href="<?php echo SITE_URL;?>css/admin.css" rel="stylesheet">
-		<link href="<?php echo SITE_URL;?>css/bootstrap-table.min.css" rel="stylesheet">
-		<link href="<?php echo SITE_URL;?>css/bootstrap-datetimepicker.min.css" rel="stylesheet">
-		<link href="<?php echo SITE_URL;?>dashboard-design/bower_components/datatables/media/css/dataTables.bootstrap.css" rel="stylesheet">
-		
-		
-		<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
-		<!--[if lt IE 9]>
-		  <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
-		  <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-		<![endif]-->
-
-		<script src="<?php echo SITE_URL;?>js/jquery.min.js"></script>
-		<script src="<?php echo SITE_URL;?>js/moment.js"></script>
-		<script src="<?php echo SITE_URL;?>js/bootstrap.min.js"></script>
-		<script src="<?php echo SITE_URL;?>js/ping.js"></script>
-		<script src="<?php echo SITE_URL;?>js/bootstrap-table.min.js"></script>
-		<script src="<?php echo SITE_URL;?>js/plugin.js"></script>
-		<script src="<?php echo SITE_URL;?>js/bootstrap-datetimepicker.min.js"></script>    
-		<script src="<?php echo SITE_URL;?>js/jquery.validate.min.js"></script>
-		<script src="<?php echo SITE_URL;?>dashboard-design/bower_components/datatables/media/js/jquery.dataTables.min.js"></script>
-		<script src="<?php echo SITE_URL;?>dashboard-design/bower_components/datatables/media/js/dataTables.bootstrap.js"></script>
+		<?php echo $this->load->view('includes/common',array(),true); ?>
 
 		<script>
 		var base_url='<?php echo SITE_URL; ?>';
@@ -119,11 +92,13 @@
 								Masters <span class="caret"></span>
 							</a>
 							<ul class="dropdown-menu" role="menu">
+								<li><a href="<?php echo base_url('admin/skillset') ?>">Skills Master</a></li>
 								<li><a href="<?php echo base_url('admin/education') ?>">Education Master</a></li>
 								<li><a href="<?php echo base_url('admin/industry') ?>">Industry Master</a></li>
-								<li><a href="<?php echo base_url('admin/location') ?>">Location Master</a></li>
 								<li><a href="<?php echo base_url('admin/functional') ?>">Functional Master</a></li>
 								<li><a href="<?php echo base_url('admin/country') ?>">Country Master</a></li>
+								<li><a href="<?php echo base_url('admin/state') ?>">State Master</a></li>
+								<li><a href="<?php echo base_url('admin/location') ?>">Location Master</a></li>
 								<!-- <li class="divider"></li> -->
 								<!-- <li class="dropdown-header">Nav header</li> -->
 							</ul>

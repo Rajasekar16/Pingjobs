@@ -20,6 +20,7 @@ $status=@$employer['status'];
 $created_date=@$employer['created_date'];
 $about_company=@$employer['about_company'];
 $premium_employer=@$employer['premium_employer'];
+$logo=@$employer['logo'];
 ?>
 <!-- Begin page content -->
 <div class="container container-home">
@@ -40,7 +41,7 @@ $premium_employer=@$employer['premium_employer'];
 				$action = "admin/create_employee";
 			else
 				$action = "employer/add_update";
-			echo form_open($action,array('class'=>"form-horizontal","id"=>"add_employee","onsubmit"=>"return employer_validation();"));
+			echo form_open_multipart($action,array('class'=>"form-horizontal","id"=>"add_employee","onsubmit"=>"return employer_validation();"));
 			?>
 				<?php echo $this->session->flashdata('msg'); ?>
 				<!-----CUSTOM MESSAGE START------>
@@ -48,6 +49,7 @@ $premium_employer=@$employer['premium_employer'];
 				<!-----CUSTOM MESSAGE END------>
 				<input type="hidden" id ="id" name ="id" value ="<?php  echo $id; ?>"/>
 				<div class="col-md-6">
+					<?php if(isset($company_type_array)): ?>
 					<!-- Multiple Radios (inline) -->
 					<div class="form-group">
 						<label class="col-md-5 control-label" for="company_type">Company Type</label>
@@ -59,6 +61,7 @@ $premium_employer=@$employer['premium_employer'];
 							<?php } ?>
 						</div>
 					</div>
+					<?php endif; ?>
 
 					<!-- Text input-->
 					<div class="form-group required">
@@ -134,6 +137,36 @@ $premium_employer=@$employer['premium_employer'];
 						</div>
 					</div>
 
+					<!-- Text input-->
+					<div class="form-group">
+						<label class="col-md-5 control-label" for="conatact_no">Company Logo</label>  
+						<div class="col-md-7">
+							<input id="company_logo" name="company_logo" type="file" accept="image/*" placeholder="Company Logo" class="form-control input-md hide" size="20" />
+							<h4>
+								<a id="uploadLogoTrigger" class="btn btn-danger btn-action" data-toggle="tooltip" data-placement="right" data-title="Upload logo">
+									Upload
+								</a>&nbsp;
+	                    		<span class='label label-info' id="logoName">
+									<?php echo (@$logo=='') ? 'No logo uploaded' : ''; ?>
+								</span>
+							</h4>
+							<div class="errorBox"><?php echo @$fileUploadError; ?></div>
+						</div>
+					</div>
+					<?php
+					if(@$logo!='')
+					{
+					?>
+						<div class="form-group">
+							<label class="col-md-5 control-label" for="conatact_no"></label>
+							<div class="col-md-7">
+								<img src="../../upload/logo/<?php echo $logo;?>" class="img-rounded" width="100" />
+							</div>
+						</div>
+					<?php
+					}
+							
+					?>
 				</div>
 				<div class="col-md-6">
 					<!-- Text input-->
@@ -269,8 +302,10 @@ $premium_employer=@$employer['premium_employer'];
 								echo 'Update Profile';
 							?>
 						</button>
-						<button id="button1id" type="reset" class="btn btn-default">Reset</button>&nbsp;&nbsp;
+						<button id="resetBtn" type="reset" class="btn btn-default">Reset</button>&nbsp;&nbsp;
+						<?php if(@$this->session->userdata['loggedin_admin']): ?>
 						<a href="<?php echo base_url();?>/admin/employer"  >Back</a>&nbsp;&nbsp;
+						<?php endif; ?>
 					</div>
 				</div>
 			</form>
@@ -280,6 +315,18 @@ $premium_employer=@$employer['premium_employer'];
 <div class="clearfix">&nbsp;</div>
 
 <script>
+$(function(){
+	$("#uploadLogoTrigger").click(function(){
+		$('#company_logo').trigger('click');
+	});
+	$('#company_logo').change(function(){
+		$('#logoName').text(this.files[0].name);
+	});
+	$('#resetBtn').click(function(){
+		$('#logoName').text('<?php echo (@$logo=='') ? 'No logo uploaded' : '' ?>');
+	});
+})();
+
 function verify_employer_email(element,email)
 {
 	if($("#email").valid() == false)

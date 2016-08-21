@@ -1,4 +1,5 @@
-    <footer class="footer">
+</div>
+	<footer class="footer">
 	    <div class="footer-nav">
 		      <div class="container">
 		      	<div class="row">      	
@@ -55,7 +56,9 @@
 
 <div class="modal" id="employeelogin" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog">
-  	<form   onsubmit="return login_employee()"  id ="employee-form-login" method="post" >
+	<?php
+	echo form_open('javascript:;',array('class'=>"form-horizontals","id"=>"employee-form-login","onsubmit"=>"return login_employee();"));
+	?>
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
@@ -125,7 +128,9 @@
 
 <div class="modal" id="employerlogin" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog">
-  	<form   id="form-login"  role="login" onsubmit="return login()"  action="<?php  echo SITE_URL;?>employer/verify_login" method="post" >
+	<?php
+	echo form_open('employer/verify_login',array('class'=>"form-horizontals","role"=>"login","id"=>"form-login","onsubmit"=>"return login();"));
+	?>
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
@@ -151,7 +156,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-        <button type="submit" name="employer_login" class="btn btn-primary"  onclick ="login()"><i class="glyphicon glyphicon-log-in"></i> Login</button>
+        <button type="submit" name="employer_login" class="btn btn-primary"><i class="glyphicon glyphicon-log-in"></i> Login</button>
       </div>
     </div>
 </form>
@@ -163,7 +168,6 @@
     gBaseUrl = "<?php echo base_url(); ?>";  
     function login()
     {
-
       if($('#employer_email').val() != ''  &&  $('#employer_password').val() != '' )
       {
       $.ajax({

@@ -27,7 +27,7 @@
   <body>
 	<div class="container">
 		<div class="page-header">
-			<h1>Ping jobs</h1>
+			<h1><a href="<?php echo SITE_URL;?>" class="raw-text">Ping jobs</a></h1>
 		</div>
 		<div class="message-div"></div>
 		<div class="row">&nbsp;</div>

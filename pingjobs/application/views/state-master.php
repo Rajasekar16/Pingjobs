@@ -4,14 +4,14 @@
     <div class="row">
       <div class="col-md-6">
         <div class="page-header">
-        <h3 class="light">Location Management</h3>
+        <h3 class="light">State Management</h3>
         </div>
       </div>
       <div class="col-md-6 pad-top-10">
         <div class="navbar-collapse collapse">
           <!-- <div class="col-md-4"><small><strong>48</strong> Clients Found</small></div> -->
           <ul class="nav navbar-nav navbar-right">
-                <li><a  data-toggle="modal" data-target="#addDialog"><i class="glyphicon glyphicon-plus"></i> Add Location</a></li>
+                <li><a  data-toggle="modal" data-target="#addDialog"><i class="glyphicon glyphicon-plus"></i> Add State</a></li>
                 <li><a onclick="common_delete(4)" ><i class="glyphicon glyphicon-trash"></i> Delete</a></li>
           </ul>
           <div class="clearfix"></div>
@@ -56,19 +56,19 @@
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="myModalLabel">Manage Location</h4>
+        <h4 class="modal-title" id="myModalLabel">Manage States</h4>
       </div>
       <?php
 	  echo form_open('admin/add_update',array('class'=>"form-horizontal"));
 	  ?>
         <div class="modal-body">
 			<div class="form-group required">
-              <label class="col-md-4 control-label" for="name">State</label>  
+              <label class="col-md-4 control-label" for="name">Country</label>  
               <div class="col-md-6">
-                <select id="state_id" name="state_id" class="form-control input-md" required="required">
-                	<option value="">--Select State--</option>
-                	<?php foreach ($state as $states) :?>
-                	<option value="<?php echo $states['id']; ?>"><?php echo $states['name']; ?></option>
+                <select id="country_id" name="country_id" class="form-control input-md" required="required">
+                	<option value="">--Select Country--</option>
+                	<?php foreach ($country as $countries) :?>
+                	<option value="<?php echo $countries['id']; ?>"><?php echo $countries['name']; ?></option>
                 	<?php endforeach;?>
                 </select>              
               </div>
@@ -95,9 +95,9 @@
 
        <div class="modal-footer">
           <input type="hidden" name="mode" id="mode" value="create" />
-          <input type="hidden" name="tableId" id="tableId" value="4" />
+          <input type="hidden" name="tableId" id="tableId" value="9" />
           <input type="hidden" name="editId" id="editId" value="" />
-          <input type="hidden" name="redirect_url" id="redirect_url" value="admin/location" />
+          <input type="hidden" name="redirect_url" id="redirect_url" value="admin/state" />
           <button type="button" onclick="clearAll(this)"  class="btn btn-default" data-dismiss="modal">Clear</button>
           <button type="submit" class="btn btn-crm-blue">Save</button>
         </div>
@@ -109,8 +109,52 @@
 
 <script type="text/javascript">
   gData=JSON.parse('<?php echo $list; ?>');
-  draw_location_master_header();
-  draw_location_master();  
+
+  function draw_state_master_header()
+  {
+  	var output=[];
+  	output.push('<tr>\
+  					<th><input type="checkbox" class="checkheader" value="" ></th>\
+  					<th>#</th>\
+  					<th>Country</th>\
+  					<th>Name</th>\
+  					<th>Status</th>\
+  					<th></th>\
+  				</tr>');
+  	output=output.join('');
+  	dom.getElementById('master_table_header').innerHTML=output;
+  }
+
+  function draw_state_master()
+  {
+  	var output=[];
+  	var data=gData;	
+  	var data_length=data.length;
+  	if(data_length>0)
+  	{
+  		for(var i=0; i<data_length; i++)
+  		{
+  			var iplus=i+1;
+  			output.push('<tr>\
+  							<td><input type="checkbox" class="checkitem" value="'+data[i].id+'" ></td>\
+  							<td>'+iplus+'</td>\
+  							<td>'+data[i].country_name+'</td>\
+  							<td>'+data[i].name+'</td>\
+  							<td><a class="glyphicon glyphicon-stop '+data[i].status_class+'"></a></td>\
+  							<td><a onclick="edit_industry('+data[i].id+',9)" class="btn btn-default btn-action"><i class="glyphicon glyphicon-edit"></i></a></td>\
+  						</tr>');
+  		}
+  	}else{
+  		output.push('<tr>\
+  	             <td colspan="10"><p class="text-center">No record found!</p></td>\
+  	             </tr>');
+  	}
+  	output=output.join('');
+  	dom.getElementById('master_table_data').innerHTML=output;
+  }
+
+  draw_state_master_header();
+  draw_state_master();
 </script>
 
 <?php echo $footer; ?>

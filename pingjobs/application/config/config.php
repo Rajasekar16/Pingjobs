@@ -515,4 +515,6 @@ $GLOBALS['tables']=array(
        6=>array('tableName'=>'employer','deleteType'=>'deleteUpdate','whereFiled'=>'id','updateFiled'=>'status'),
        7=>array('tableName'=>'country','deleteType'=>'deleteUpdate','whereFiled'=>'id','updateFiled'=>'status'),
        8=>array('tableName'=>'job','deleteType'=>'deleteUpdate','whereFiled'=>'id','updateFiled'=>'job_status'),
+       9=>array('tableName'=>'state','deleteType'=>'deleteUpdate','whereFiled'=>'id','updateFiled'=>'status'),
+       10=>array('tableName'=>'skills','deleteType'=>'deleteUpdate','whereFiled'=>'id','updateFiled'=>'status')
       );

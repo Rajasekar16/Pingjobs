@@ -1,6 +1,4 @@
 <?php echo $header; ?>
-
-<?php echo $top_search; ?>
     <!-- Begin page content -->
     <!-- Tag select reference http://timschlechter.github.io/bootstrap-tagsinput/examples/ -->
        

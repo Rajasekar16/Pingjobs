@@ -83,6 +83,12 @@ class Job extends CI_Controller {
 
 	}
 
+	public function employerJobs()
+	{
+		$employers = $this->uri->segment(3);
+		$_POST['employer_id'] = $employers;
+		$this->jobsearch();
+	}
 
 	public function add_update()
 	{
@@ -133,8 +139,8 @@ class Job extends CI_Controller {
 		exit;
 	}
 
-public function listjobs()
-{
+	public function listjobs()
+	{
 		$data=array();		
 		$employer_id=@$this->session->userdata['loggedin_employer']['id'];
 		//echo $employer_id;//die();
@@ -143,8 +149,8 @@ public function listjobs()
 		if($employer_id>0)
 		{
 			$sendData=array();
-			$sendData['employer_id']=' employer_id='.$employer_id.' and job_status!=3' ;
-			$jobs = $this->Job_model->get_jobs($sendData);
+			$sendData['employer_id']=$employer_id;
+			$jobs = $this->Job_model->get_jobs($sendData);#echo $this->db->last_query();
 		}else
 		{
 			redirect('login');
@@ -178,7 +184,7 @@ public function listjobs()
 
 		$data['jobs']=json_encode($record);
 		// echo "<pre>";
-		// print_r($data['job']);die;
+		// print_r($jobs);die;
 
 		$data['header']=$this->load->view('includes/header', $data, true);
 		$data['footer']=$this->load->view('includes/footer', $data, true);
@@ -244,13 +250,16 @@ public function listjobs()
 		$sendData['limit']=$limit;
 
 		$_POST['search']=1;
-		$skills=@$_POST['skills'];
-		$location=@$_POST['location'];
-		$industry=@$_POST['industry'];
-		$experience=@$_POST['experience'];
-		$orderby=@$_POST['orderby'];
-		$last_days=@$_POST['last_days'];
-		$salary=@$_POST['salary'];
+		$skills=$this->input->post('skills');#@$_POST['skills'];
+		$location=$this->input->post('location');#@$_POST['location'];
+		$industry=$this->input->post('industry');#@$_POST['industry'];
+		$experience=$this->input->post('experience');#@$_POST['experience'];
+		$orderby=$this->input->post('orderby');#@$_POST['orderby'];
+		$last_days=$this->input->post('last_days');#@$_POST['last_days'];
+		$salary=$this->input->post('salary');#@$_POST['salary'];
+		$employerId=$this->input->post('employer_id');#@$_POST['employer_id'];
+		$educationId=$this->input->post('education');
+		$jobTypeId=$this->input->post('job_type');
 		if($skills!='')
 		{
 			$where_skill='';
@@ -343,6 +352,10 @@ public function listjobs()
 		{
 			$sendData['experience']=' ( job_experience_from >="'.$experience .'" OR job_experience_to <= "'.$experience .'") ';
 		}
+		if($employerId!='' && $employerId>0)
+		{
+			$sendData['employer_id']= $employerId ;
+		}
 
 		if($last_days!='' && $last_days>0)
 		{
@@ -385,25 +398,23 @@ public function listjobs()
 		$data['searchLocation']='';
 		$data['searchIndustry']='';
 		$data['searchExperience']='';
+		$data['searchJobType']='';
+		$data['searchEducation']='';
 		if(isset($_POST['skills']))
 		{
 			$data['searchSkills']=@$_POST['skills'];
 		}
 		//Load the job by location
-		if($this->uri->segment(4))
+		if($this->uri->segment(3))
 		{
-			$jobSearch = explode("-",$this->uri->segment(3));
-			if(count($jobSearch) > 1)
-			{
-				if(strtoupper($jobSearch[0]) == "JOBS")
-				{
-					$data['searchLocation']=$this->uri->segment(4);
-				}
-				else
-				{
-					$data['searchIndustry']=$this->uri->segment(4);
-				}
-			}
+			if($this->uri->segment(3) == "industry")
+				$data['searchIndustry']=$this->uri->segment(4);
+			if($this->uri->segment(3) == "jobs-in")
+				$data['searchLocation']=$this->uri->segment(4);
+			if($this->uri->segment(3) == "jobs")
+				$data['searchJobType']=$this->uri->segment(4);
+			if($this->uri->segment(3) == "education")
+				$data['searchEducation']=$this->uri->segment(4);
 		}
 		if(isset($_POST['location']))
 		{
@@ -414,6 +425,11 @@ public function listjobs()
 			$data['searchExperience']=@$_POST['experience'];
 		}
 		$sendData=array();
+		if(isset($_POST['employer_id']))
+		{
+			$data['employerId']=@$_POST['employer_id'];
+			$sendData['employer_id']=@$_POST['employer_id'];
+		}
 		$jobs = $this->Job_model->get_jobs($sendData);
 		$job_list=array();
 		foreach ($jobs as $job) {
@@ -428,14 +444,72 @@ public function listjobs()
 		// echo "<pre>";
 		// print_r($job_list);
 		// die;
+		$master_data=array();
 		$master_data['table_name']='location';
 		$master_data['where']=' status=1 ';
 		$data['location']=$this->Common_model->get_master($master_data);
+
+		if($data['searchLocation']!=''){
+			$locationId = 0;
+			foreach ($data['location'] as $datas) {
+				if(strtoupper($datas['name']) == strtoupper($data['searchLocation'])) {
+					$locationId = $datas['id'];
+					break;
+				}
+			}
+			$data['searchLocation'] = $locationId;
+		}
 
 		$master_data['table_name']='industry';
 		$master_data['where']=' status=1 ';
 		$data['industry']=$this->Common_model->get_master($master_data);
 
+		if($data['searchIndustry']!=''){
+			$industryId = 0;
+			foreach ($data['industry'] as $datas) {
+				if(strtoupper($datas['name']) == strtoupper($data['searchIndustry'])) {
+					$industryId = $datas['id'];
+					break;
+				}
+			}
+			$data['searchIndustry'] = $industryId;
+		}
+		
+		if($data['searchJobType']!=''){
+
+			$master_data=array();
+			$master_data['table_name']='job_type';
+			$master_data['where']=' status=1 ';
+			$data['jobType']=$this->Common_model->get_master($master_data);
+			
+			$jobTypeId = 0;
+			foreach ($data['jobType'] as $datas) {
+				if(str_replace(" ", "-", strtoupper($datas['name'])) == strtoupper($data['searchJobType'])) {
+					$jobTypeId = $datas['id'];
+					break;
+				}
+			}
+			$data['searchJobType'] = $jobTypeId;
+		}
+		
+		if($data['searchEducation']!=''){
+
+			$master_data=array();
+			$master_data['table_name']='education';
+			$master_data['where']=' status=1 ';
+			$data['education']=$this->Common_model->get_master($master_data);
+			
+			$educationId = 0;
+			foreach ($data['education'] as $datas) {
+				if(str_replace(" ", "-", strtoupper($datas['name'])) == strtoupper($data['searchEducation'])) {
+					$educationId = $datas['id'];
+					break;
+				}
+			}
+			$data['searchEducation'] = $educationId;
+		}
+		
+		#echo "<pre>";print_r($data);exit;
 		// $data['list']=json_encode($job_list);
 		// $data['total_group']=$total_record/$limit;
 		$data['header']=$this->load->view('includes/header', $data, true);

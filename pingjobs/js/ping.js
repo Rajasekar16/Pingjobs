@@ -88,6 +88,10 @@ $(function(){
 });
 
 $(function(){
+	$(".chosen").chosen();
+});
+
+$(function(){
 	var windowHeight=$(window).height();
 	var contentHeight=windowHeight-270;
 	
@@ -350,6 +354,10 @@ function edit_industry(id,tableId)
                     	if(response.status=='ok')
                     	{
 	                		var data=response.data;
+	                		if(data.state_id)
+	                			dom.getElementById('state_id').value=data.state_id;
+	                		if(data.country_id)
+	                			dom.getElementById('country_id').value=data.country_id;
 	                		dom.getElementById('name').value=data.name;
 	                		dom.getElementById('status').value=data.status;	                		
 	                		dom.getElementById('editId').value=id;
@@ -839,7 +847,7 @@ function delete_job(id)
 		{
 			$.ajax({
 		        url: base_url+'job/delete_job/',
-		        data: 'id='+id,
+		        data: 'id='+id+'&csrf_token_name='+document.forms[0].csrf_token_name.value,
 		        type: 'POST',
 		        dataType: 'json',
 		        beforeSend: function(msg){
@@ -915,7 +923,7 @@ function job_approve()
 		alert('Please select atleast one item');
 	}
 }
-
+/*
 function job_filters()
 {
 	var output=[];
@@ -990,7 +998,7 @@ function draw_jobs()
 	}
 	output=output.join('');
 	dom.getElementById('job_list').innerHTML=output;
-}
+}*/
 
 function draw_jobs_ajax(data)
 {	
@@ -1502,7 +1510,7 @@ $(function(){
                 }
                 else
                 {
-                	alert(response.msg)
+                	alert(response.msg);
                 }
                 
                 //vunload();

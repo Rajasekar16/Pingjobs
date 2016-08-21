@@ -87,6 +87,21 @@ class Employer_model extends CI_Model
         }
         return 1;
     }
+	
+    public function get_logo($id=0)
+    {
+		if(!$id)
+			return '';
+		$logo = '';
+        $this->db->where('id',$id);
+        $query=$this->db->get('employer');
+        if($query->num_rows()>0)
+        {
+            $res= $query->result_array();
+            $logo=$res[0]['logo'];
+        }
+        return $logo;
+    }
 }
 
 ?>

@@ -50,7 +50,6 @@
         </tbody>
         </table>
       </div>
-    </div>
 
 <?php echo $footer; ?>
 
@@ -61,19 +60,21 @@
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
         <h4 class="modal-title" id="myModalLabel">Manage Education</h4>
       </div>
-      <form class="form-horizontal" method="post" action="<?php echo base_url(); ?>admin/add_update">
+      <?php
+	  echo form_open('admin/add_update',array('class'=>"form-horizontal"));
+	  ?>
         <div class="modal-body">          
             <div class="form-group">
               <label class="col-md-4 control-label" for="name">Education Name</label>  
               <div class="col-md-6">
-                <input id="name" name="name" type="text" placeholder="Enter Name" class="form-control input-md" required="">              
+                <input id="name" name="name" type="text" placeholder="Enter Name" class="form-control input-md" required="required" />              
               </div>
             </div>
 
             <div class="form-group">
               <label class="col-md-4 control-label" for="level">Level</label>  
               <div class="col-md-6">
-                <select id="level" name="level" class="form-control input-md" required="">
+                <select id="level" name="level" class="form-control input-md" required="required">
                   <option value=''>Select Level</option>
                   <option value='1'>Basic</option>
                   <option value='2'>Master</option>

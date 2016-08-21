@@ -43,16 +43,16 @@ else
 			<!-- Text input-->
 			<div class="form-group">
 				<label class="col-md-5 control-label" for="job_type_id">
-					Job type
+					Job Type
 				</label>
 				<div class="col-md-7">
+					<select name="job_type_id" id="job_type_id" class="form-control">
 			  <?php foreach($job_type as $row) {?>
-				
-					<label class="radio inline display-radio">
-						<input type="radio" name="job_type_id" value="<?php echo $row['id'];?>" <?php echo ((!isset($job_data['job_type_id']) && $row['id'] == 1) || $row['id'] == @$job_data['job_type_id']) ? 'checked="checked"':''; ?> >
+					<option value="<?php echo $row['id'];?>" <?php echo ((!isset($job_data['job_type_id']) && $row['id'] == 1) || $row['id'] == @$job_data['job_type_id']) ? 'selected':''; ?> >
 						<?php echo ucfirst($row['name']);?>
-					</label>
+					</option>
 			  <?php } ?>
+					</select>
 				 </div>
 			</div>
 			<!-- Select Employer -->
@@ -72,7 +72,7 @@ else
 			  <div class="form-group required">
 				<label class="col-md-5 control-label" for="textinput">Job title</label>  
 				<div class="col-md-7">
-				<input id="job_title" name="job_title" type="text"  placeholder="Enter Job Title" class="form-control input-md" required="" value="<?php echo @$job_data['job_title'] ?>"  required>                      
+				<input id="job_title" name="job_title" type="text"  placeholder="Enter Job Title" class="form-control input-md" required="required" value="<?php echo @$job_data['job_title'] ?>"  required>                      
 				</div>
 			  </div>
 
@@ -121,7 +121,12 @@ else
 			  <div class="form-group required">
 				<label class="col-md-5 control-label" for="keyskills">Key Skills</label>  
 				<div class="col-md-7">
-					<input type="text" id="job_key_skill" name="job_key_skill" data-role="tagsinputs" placeholder="Key Skills" class="form-control input-md" required />
+					<select id="job_key_skill" name="job_key_skill[]" class="form-control chosen" data-placeholder="Key Skills" required multiple>
+						<option value="" disabled>Use Ctrl key to select multiple</option>
+					  <?php  foreach($skills as $row) {?> 
+							<option value="<?php echo $row['id'];?>" <?php echo @(in_array($row['id'],$job_data['skills'])) ? 'selected="selected"':''; ?>><?php echo ucfirst($row['name']);?></option>
+					  <?php } ?>
+					  </select>
 				</div>
 			  </div>
 			  
@@ -138,10 +143,10 @@ else
 			  <div class="form-group required">
 				<label class="col-md-5 control-label" for="selectbasic">Education</label>
 				<div class="col-md-7">
-				  <select id="job_education_id" name="job_education_id" size=5" class="form-control" multiple required>
+				  <select id="job_education_id" name="job_education_id[]" size="5" class="form-control chosen" data-placeholder="Select qualification" multiple="multiple" required="required">
 					<option value="" disabled>Use Ctrl key to select multiple</option>
 					<?php foreach($education as $row) { ?> 
-						<option value="<?php echo $row['id'];?>" <?php echo ($row['id'] == @$job_data['job_education_id'])? 'selected="selected"':''; ?>><?php echo ucfirst($row['name']);?></option>
+						<option value="<?php echo $row['id'];?>" <?php echo @(in_array($row['id'],$job_data['education'])) ? 'selected="selected"':''; ?>><?php echo ucfirst($row['name']);?></option>
 					<?php } ?>
 				  </select>
 				</div>
@@ -184,7 +189,7 @@ else
 			  <div class="form-group">
 				<label class="col-md-5 control-label" for="selectbasic">Gender Preference</label>
 				<div class="col-md-7">
-				  <select id="  job_gender_id" name="  job_gender_id" class="form-control">
+				  <select id="job_gender_id" name="job_gender_id" class="form-control">
 					<option value="3" <?php echo (@$job_data['job_gender_id'] == 3)? 'selected="selected"':''; ?>>Any</option>
 					<option value="1" <?php echo (@$job_data['job_gender_id'] == 1)? 'selected="selected"':''; ?>>Male</option>
 					<option value="2" <?php echo (@$job_data['job_gender_id'] == 2)? 'selected="selected"':''; ?>>Female</option>
@@ -210,7 +215,7 @@ else
 			<div class="form-group">
 			  <label class="col-md-5 control-label" for="textinput">Job State</label>  
 			  <div class="col-md-7">
-				<select id="job_location_id" name="job_location_id" class="form-control">
+				<select id="job_state_id" name="job_state_id" class="form-control">
 				  <?php 
 				  foreach($state as $row)
 				  {?> 
@@ -262,7 +267,7 @@ else
 		   <div class="col-md-12">
 			  <div>
 				<div class="col-md-2"></div>  
-				<input type="checkbox"  checked="checked" id="terms" value="2"> We agree to the <a>Terms of Use</a> & <a>Privacy Policy</a>
+				<input type="checkbox"  checked="checked" id="terms" value="2"> We agree to the <a>Terms of Use</a> &amp; <a>Privacy Policy</a>
 			  </div>
 		  </div>
 			<?php endif; ?>
@@ -391,8 +396,34 @@ function postjob()
       alert('Please add aleast one key skills');
       return false ;
     }
+    if($('#job_salary_from').val() || $('#job_salary_to').val())
+    {
+    	if(!$('#job_salary_from').val())
+        {
+          alert('Please enter minimum annual salary');
+          return false ;
+        }
+        if(!$('#job_salary_to').val())
+        {
+            alert('Please enter maximum annual salary');
+            return false ;
+        }
+    }
+	if($('#job_experience_from').val() || $('#job_experience_to').val())
+    {
+    	if(!$('#job_experience_from').val())
+        {
+          alert('Please enter minimum job experience');
+          return false ;
+        }
+        if(!$('#job_experience_to').val())
+        {
+            alert('Please enter maximum job experience');
+            return false ;
+        }
+    }
     $('#pre_job_desc').html($('#job_desc').val());
-    $('#pre_job_experience_from').html($('#job_experience_from').val());
+    $('#pre_job_experience_from').html($('#job_experience_from').val()|0);
     $('#pre_job_experience_to').html($('#job_experience_to').val());
     $('#pre_job_no_postition').html($('#job_no_postition').val());
     $('#pre_job_salary_from').html($('#job_salary_from').val());
@@ -451,27 +482,6 @@ function job_validation()
 {
    
 }
-
-
-$(document).ready(function(){
-	$('#job_key_skill').tagsinput({
-		maxTags: 5,
-		trimValue: true
-	});
-	$('#job_key_skill').on('beforeItemAdd', function(event) {
-		var skills = JSON.parse('<?php echo $json_skills; ?>');
-		for(var x in skills)
-		{
-			if(skills[x].name.toUpperCase() == event.item.toUpperCase())
-			{
-				event.item = skills[x].name;
-				return true;
-			}
-		}
-		event.cancel=true;
-	});
-});
-
 </script>
 
 <?php echo $footer; ?>

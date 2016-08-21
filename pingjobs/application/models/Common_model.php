@@ -72,6 +72,40 @@ class Common_model extends CI_Model
         }
     }
 
+    public function mappingTable($data)
+    {
+        $table_name=$data['table_name'];
+        unset($data['table_name']);
+        if($table_name!='')
+        {
+            if(!empty($data))
+            {
+				$getData = array();
+				$getData['table_name'] = $table_name;
+				$getData['where'] = $data['primary_id']." = ".$data['primary_value'];
+				$result = $this->get_master($getData);
+				
+				$primary_id = $data['primary_id'];
+				$primary_value = $data['primary_value'];
+				unset($data['primary_id']);
+				unset($data['primary_value']);
+				if(empty($result))
+                {
+					foreach($data AS $key=>$values)
+					{
+						foreach($values as $rowData)
+						{
+							$this->db->set($primary_id,$primary_value);
+							$this->db->set($key,$rowData);
+							$this->db->insert($table_name);
+						}
+					}
+                    return 1;         
+                }
+            }
+        }
+    }
+	
     public function deleteRemove($data)
     {
         if($data['whereFiled'] !='' && !empty($data['ids']))
