@@ -58,12 +58,15 @@ if($year<1980){$employee_current_to_date = date('Y/m/d');}
     <div class="container container-home signup-forms">
       <div class="row">
         <div class="col-md-12 box">
-                  <!-- <h2 class="light page-header">Employee Signup</h2> -->
-        <form style="display:none;" method="post" id="resume_upload_form" enctype="multipart/form-data">
-            <input type="file" id="resume_upload" name="resume_upload" />
-          </form>
+                  <!-- <h2 class="light page-header">Employee Signup</h2> 
+			<form style="display: none;" method="post" id="resume_upload_form"
+				enctype="multipart/form-data">-->
+			<?php echo form_open_multipart("",array("id"=>"resume_upload_form","style"=>"display: none;")); ?>
+				<input type="file" id="resume_upload" name="resume_upload" />
+			</form>
 
-            <form  enctype="multipart/form-data"  id ="employee-add-form" class="form-horizontal" onsubmit="return employee_validation();" method="post" id="employee_form" >              
+			<!-- <form enctype="multipart/form-data" id ="employee-add-form" class="form-horizontal" onsubmit="return employee_validation();" method="post" > -->
+			<?php echo form_open_multipart("",array("id"=>"employee-add-form", "class"=>"form-horizontal","onsubmit"=>"return employee_validation();")); ?>              
                   <!-- Text input-->
 
                      <div class="alert alert-danger" style="display:none">
@@ -82,7 +85,7 @@ if($year<1980){$employee_current_to_date = date('Y/m/d');}
                     <div class="form-group required">
                     <label class="col-md-5 control-label" for="employee_name">Name</label>  
                     <div class="col-md-7">
-                    <input id="employee_name" maxlength="100" name="employee_name"    placeholder="Enter Name" class="form-control input-md" 
+                    <input id="employee_name" required maxlength="100" name="employee_name"  placeholder="Enter Name" class="form-control input-md" 
                     value="<?php  echo $employee_name; ?>">
                   </div>
                     
@@ -92,8 +95,8 @@ if($year<1980){$employee_current_to_date = date('Y/m/d');}
                   <div class="form-group required">
                     <label class="col-md-5 control-label" for="employee_email">Email</label>  
                     <div class="col-md-7">
-                    <input id="employee_email" maxlength="100" name="employee_email"  onblur="verify_employee_email(this, this.value)" type="email" placeholder="Enter Email Address" class="form-control input-md" required=""
-                    value="<?php  echo $employee_email; ?>">
+                    <input id="employee_email" maxlength="100" name="employee_email"  onblur="verify_employee_email(this, this.value)" type="email" placeholder="Enter Email Address" class="form-control input-md" required="required" 
+                    value="<?php  echo $employee_email; ?>" />
                     <div id="verify_email" class="errorBox" ></div>
                     <input type="hidden" id="email_available_flag" value="0" />
                     </div>
@@ -103,7 +106,7 @@ if($year<1980){$employee_current_to_date = date('Y/m/d');}
                   <div class="form-group required">
                     <label class="col-md-5 control-label" for="employee_password">Password</label>  
                     <div class="col-md-7">
-                    <input id="employee_password" maxlength="50" name="employee_password" type="password" placeholder="Enter Password" class="form-control input-md" required="" value="<?php  echo $employee_password; ?>">
+                    <input id="employee_password" maxlength="50" name="employee_password" type="password" placeholder="Enter Password" class="form-control input-md" required="required"  value="<?php  echo $employee_password; ?>">
                       
                     </div>
                   </div>
@@ -112,7 +115,7 @@ if($year<1980){$employee_current_to_date = date('Y/m/d');}
                   <div class="form-group required">
                     <label class="col-md-5 control-label" for="textinput">Confirm Password</label>  
                     <div class="col-md-7">
-                    <input id="employee_conf_password"  type="password" placeholder="Re enter Password" class="form-control input-md" required="" >
+                    <input id="employee_conf_password"  type="password" placeholder="Re enter Password" class="form-control input-md" required="required"  >
                     <div class="errorBox"></div>
                     </div>
                   </div>
@@ -121,9 +124,9 @@ if($year<1980){$employee_current_to_date = date('Y/m/d');}
                   <div class="form-group required">
                     <label class="col-md-5 control-label" for="employee_exp_year">Experience</label>  
                     <div class="col-xs-5ths">
-                      <select id="employee_exp_year" name="employee_exp_year" class="form-control" required>
+                      <select id="employee_exp_year" name="employee_exp_year" class="form-control" required="required" >
                         <option value="">Years</option>
-                        <option value="0">freshers</option>
+                        <option value="0">Freshers</option>
                         <?php 
                         for($i=1;$i<=30;$i++)
                         {
@@ -141,7 +144,7 @@ if($year<1980){$employee_current_to_date = date('Y/m/d');}
                     </div>
                     <div class="col-xs-5ths">
                       <select id="employee_exp_month" name="employee_exp_month" class="form-control">
-                        <option value="0">Months</option>
+                        <option value="">Months</option>
                         <option value="0">0</option>
                         <?php 
                         for($i=1;$i<=12;$i++)
@@ -193,10 +196,10 @@ if($year<1980){$employee_current_to_date = date('Y/m/d');}
 
                 <div class="form-group">
                     <label class="col-md-5 control-label" for="employee_exp_year">Period</label>  
-                    <div class="date_from_to">
+                    <div class="col-xs-5ths date_from_to">
                       <input  class=" form-control input-md" type="text" placeholder="From" name ="employee_current_from_date"  id="fromdate"   value ="<?php echo date('m-d-Y',strtotime($employee_current_from_date)); ?>" >
                     </div>
-                    <div class="date_from_to">
+                    <div class="col-xs-5ths date_from_to">
                       <input  class=" form-control input-md" type="text" placeholder="To"  name ="employee_current_to_date" id="todate" value ="<?php echo date('m-d-Y',strtotime($employee_current_to_date)); ?>" >
                     </div>
                   </div>
@@ -204,8 +207,8 @@ if($year<1980){$employee_current_to_date = date('Y/m/d');}
 
               <div class="form-group">
                   <label class="col-md-5 control-label" for="employee_edu_basic" >Current Salary</label>
-                  <div class="col-md-5 pad-rt-0">
-                    <select id="employee_current_salary" name="employee_current_salary" class="form-control">
+                  <div class="col-md-7">
+                    <select id="employee_current_salary" name="employee_current_salary" class="form-control input-md">
                         <option value="">Select Education</option>
                         <?php 
                         foreach($salary as $row)
@@ -224,8 +227,8 @@ if($year<1980){$employee_current_to_date = date('Y/m/d');}
 
                   <div class="form-group">
                   <label class="col-md-5 control-label" for="employee_edu_basic" >Expected Salary</label>
-                  <div class="col-md-5 pad-rt-0">
-                    <select id="employee_expected_salary" name="employee_expected_salary" class="form-control">
+                  <div class="col-md-7">
+                    <select id="employee_expected_salary" name="employee_expected_salary" class="form-control input-md">
                         <option value="">Select Education</option>
                         <?php 
                         foreach($salary as $row)
@@ -300,7 +303,7 @@ if($year<1980){$employee_current_to_date = date('Y/m/d');}
 
                   <div class="form-group">
                   <label class="col-md-5 control-label" for="selectbasic">Industry</label>
-                  <div class="col-md-7 pad-rt-0">
+                  <div class="col-md-7">
                     <select id="employee_industry" name="employee_industry" class="form-control">
                       <?php 
                         foreach($industry as $row)
@@ -322,7 +325,7 @@ if($year<1980){$employee_current_to_date = date('Y/m/d');}
 
                 <div class="form-group">
                   <label class="col-md-5 control-label" for="selectbasic">Functional</label>
-                  <div class="col-md-7 pad-rt-0">
+                  <div class="col-md-7">
                     <select id="employee_functional" name="employee_functional" class="form-control">
                       <?php 
                         foreach($functional as $row)
@@ -341,7 +344,7 @@ if($year<1980){$employee_current_to_date = date('Y/m/d');}
 
                    <!-- Text input-->
                   <div class="form-group">
-                    <label class="col-md-5 control-label" for="textinput">Traing Course</label>  
+                    <label class="col-md-5 control-label" for="textinput">Training Course</label>  
                     <div class="col-md-7">
                     <input id="textinput" name="traing_course" type="text" placeholder="" class="form-control input-md"  value ="<?php  echo  $traing_course; ?>" >
                       
@@ -350,7 +353,7 @@ if($year<1980){$employee_current_to_date = date('Y/m/d');}
 
 
                   <div class="form-group">
-                    <label class="col-md-5 control-label" for="textinput">Traing Certificates</label>  
+                    <label class="col-md-5 control-label" for="textinput">Training Certificates</label>  
                     <div class="col-md-7">
                     <input id="textinput" name="traing_certificates" type="text" placeholder="" class="form-control input-md" value ="<?php  echo  $traing_certificates; ?>" >
                       
@@ -362,7 +365,7 @@ if($year<1980){$employee_current_to_date = date('Y/m/d');}
                 <!-- Select Basic --> 
                 <div class="form-group">
                   <label class="col-md-5 control-label" for="employee_edu_basic" >Under graduate(UG)</label>
-                  <div class="col-md-5 pad-rt-0">
+                  <div class="col-md-7">
                     <select id="employee_edu_basic" name="employee_edu_basic" class="form-control">
                         <option value="">Select Education</option>
                         <?php 
@@ -410,7 +413,7 @@ if($year<1980){$employee_current_to_date = date('Y/m/d');}
 
                 <div class="form-group">
                   <label class="col-md-5 control-label" for="employee_edu_master" >Post graduate(PG) </label>
-                  <div class="col-md-5 pad-rt-0">
+                  <div class="col-md-7">
                     <select id="employee_edu_master" name="employee_edu_master" class="form-control">
                         <option value="">Select Education</option>
                         <?php 
@@ -548,6 +551,8 @@ function add_master_education()
 }
 function employee_validation()
 {
+	if($('#employee-add-form').valid() == false)
+		return false;
 //alert($('#id').val());
   if( $('#id').val() >0)
   {    
@@ -628,7 +633,8 @@ function verify_employee_email(element,email)
   if(email!='')
   {
       var datObj={
-          email:email
+          email:email,
+          csrf_token_name:document.forms[0].csrf_token_name.value
       }
       $.ajax({
           url: ajax_url,
@@ -690,7 +696,17 @@ function verify_employee_email(element,email)
     $(this).closest('.li').remove();
  });
 
-
+$("#employee_exp_year").on("change",function() {
+	var freshers = true;
+	if(this.value == 0)
+		freshers = true;
+	else
+		freshers = false;
+	$("#employee_exp_month").val(0);
+	/*$("#employee_current_company").attr("readonly",freshers);
+	$("#employee_current_from_date").attr("readonly",freshers);
+	$("#employee_current_to_date").attr("readonly",freshers);*/
+});
   </script>
   </body>
 </html>

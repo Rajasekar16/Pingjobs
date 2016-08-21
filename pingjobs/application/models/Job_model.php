@@ -167,10 +167,10 @@ class Job_model extends CI_Model
         $this->db->join('location','location.id=job.job_location_id','left');
         $this->db->join('employer','employer.id=job.employer_id','left');
         //$this->db->join('education','education.id=job.job_education_id','left');
-        $this->db->where('job_status!=',3);
+        $this->db->where('job_status <> ',3);
         if(!@$this->session->userdata['loggedin_employer'] && !@$this->session->userdata['loggedin_admin'])
         {
-            $this->db->where('job_status =',2);
+            $this->db->where('job_status = ',2);
         }
 
 

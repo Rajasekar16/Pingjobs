@@ -146,9 +146,7 @@ $logo=@$employer['logo'];
 								<a id="uploadLogoTrigger" class="btn btn-danger btn-action" data-toggle="tooltip" data-placement="right" data-title="Upload logo">
 									Upload
 								</a>&nbsp;
-	                    		<span class='label label-info' id="logoName">
-									<?php echo (@$logo=='') ? 'No logo uploaded' : ''; ?>
-								</span>
+	                    		<span class='label label-info' id="logoName"><?php echo (@$logo=='') ? 'No logo uploaded' : ''; ?></span>
 							</h4>
 							<div class="errorBox"><?php echo @$fileUploadError; ?></div>
 						</div>
@@ -160,7 +158,7 @@ $logo=@$employer['logo'];
 						<div class="form-group">
 							<label class="col-md-5 control-label" for="conatact_no"></label>
 							<div class="col-md-7">
-								<img src="../../upload/logo/<?php echo $logo;?>" class="img-rounded" width="100" />
+								<img src="<?php echo base_url();?>upload/logo/<?php echo $logo;?>" alt='Company logo' class="img-rounded" width="100" />
 							</div>
 						</div>
 					<?php

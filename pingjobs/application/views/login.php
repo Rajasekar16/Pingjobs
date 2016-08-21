@@ -3,17 +3,19 @@
 	<div class="container container-home home-cats">
 		<div class="row">
 			<div class="col-md-2 pad-ltrt-0 mar-rt-0">
-			  <h3>Jobs by Location</h3>
-				<div class="box">
-				  <ul>
-					<?php foreach($location as $row) { ?>
-						<li>
-							<a href="<?php echo base_url(); ?>job/jobsearch/jobs-in/<?php echo strtolower($row['name']);?>">
-								<?php echo ucfirst($row['name']);?>
-							</a>
-						</li>
-					<?php } ?>
-				  </ul>
+				<div class="home-aside" data-spy="affix" data-offset-top="200">
+				  <h3>Jobs by Location</h3>
+					<div class="box">
+					  <ul>
+						<?php foreach($location as $row) { ?>
+							<li>
+								<a href="<?php echo base_url(); ?>job/jobsearch/jobs-in/<?php echo strtolower($row['name']);?>">
+									<?php echo ucfirst($row['name']);?>
+								</a>
+							</li>
+						<?php } ?>
+					  </ul>
+					</div>
 				</div>
 			</div>
 			<div class="col-md-6 pad-ltrt-0 home-margin border-left-2 border-right-2">
@@ -105,7 +107,7 @@
 				</div>
 			</div>
 			<div class="col-md-3 pad-ltrt-0">
-			    <div class="hero-unit">
+			    <div class="hero-unit home-aside"  data-spy="affix" data-offset-top="200">
 					<?php
 					echo form_open('login/subscribe',array('class'=>"form-horizontal","id"=>"postJob","onsubmit"=>"return postjob();"));
 					?>

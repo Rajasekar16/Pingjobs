@@ -59,56 +59,139 @@ class Employer extends CI_Controller {
 		
 
 	}
-	public function my_profile($employer_id)
+	public function my_profile($employer_id=0)
 	{
+		if($employer_id==0 || isset($this->session->userdata['loggedin_employer']))
+		{
+			if(isset($this->session->userdata['loggedin_employer']))
+				$employer_id=$this->session->userdata['loggedin_employer']['id'];
+			else
+				redirect(base_url());
+		}
+			
 		$data=array();
 		$master_data=array();
 		$master_data['table_name']='state';
 		$master_data['where']=' status=1';
 		$data['state_array']=$this->Common_model->get_master($master_data);
+		
 		$master_data=array();
 		$master_data['table_name']='location';
 		$master_data['where']=' status=1';
 		$data['location_array']=$this->Common_model->get_master($master_data);
+		
 		$master_data=array();
 		$master_data['table_name']='industry';
 		$master_data['where']=' status=1 ';
 		$data['industry_array']=$this->Common_model->get_master($master_data);
+		
 		$master_data=array();
 		$master_data['table_name']='employer';
 		$master_data['where']=' id='.$employer_id;
 		$data['employer']=$this->Common_model->get_master($master_data);
+		
+		$locations = array_column($data['location_array'], "state_id","id");
+		$data['employer'][0]['state'] = $locations[$data['employer'][0]['city']];
+		
+
+		$master_data=array();
+		$master_data['table_name']='company_type';
+		if(!@$this->session->userdata['loggedin_admin'])
+			$master_data['where']=' status=1';
+		$data['company_type_array']=$this->Common_model->get_master($master_data);
+			
 		$data['header']=$this->load->view('includes/header', $data, true);
 		$data['footer']=$this->load->view('includes/footer', $data, true);
 		$this->load->view('employer-signup',$data);
 	}
 
+	private function _deleteFile($fileName)
+	{
+		if(file_exists($fileName))
+			unlink($fileName);
+	}
+	
 	public function add_update()
 	{
-		$data = $this->input->post();
 		$config = array(
 				array( 'field' => 'id', 'label' => 'ID', 'rules' => 'trim|xss_clean' ),
-				array( 'field' => 'company_type', 'label' => 'company_type', 'rules' => 'trim|required|xss_clean' ),
-				array( 'field' => 'contact_person', 'label' => 'contact_person', 'rules' => 'trim|required|xss_clean' ),
-				array( 'field' => 'email', 'label' => 'email', 'rules' => 'trim|valid_email|required|xss_clean' ),
-				array( 'field' => 'password', 'label' => 'Password', 'rules' => 'trim|required|xss_clean' ),
-				array( 'field' => 'company_name', 'label' => 'company_name', 'rules' => 'trim|valid_email|required|xss_clean' ),
-				array( 'field' => 'industry', 'label' => 'industry', 'rules' => 'trim|valid_email|required|xss_clean' ),
-				array( 'field' => 'contact_no', 'label' => 'contact_no', 'rules' => 'trim|valid_email|required|xss_clean' ),
-				array( 'field' => 'company_employes', 'label' => 'company_employes', 'rules' => 'trim|valid_email|required|xss_clean' ),
-				array( 'field' => 'address', 'label' => 'address', 'rules' => 'trim|valid_email|required|xss_clean' ),
-				array( 'field' => 'state', 'label' => 'state', 'rules' => 'trim|valid_email|required|xss_clean' ),
-				array( 'field' => 'city', 'label' => 'city', 'rules' => 'trim|valid_email|required|xss_clean' ),
-				array( 'field' => 'pincode', 'label' => 'pincode', 'rules' => 'trim|valid_email|required|xss_clean' ),
-				array( 'field' => 'website', 'label' => 'website', 'rules' => 'trim|valid_email|required|xss_clean' ),
-				array( 'field' => 'about_company', 'label' => 'about_company', 'rules' => 'trim|valid_email|required|xss_clean' ),
+				array( 'field' => 'company_type', 'label' => 'Company type', 'rules' => 'trim|required|xss_clean' ),
+				array( 'field' => 'contact_person', 'label' => 'Contact person', 'rules' => 'trim|required|xss_clean' ),
+				array( 'field' => 'company_name', 'label' => 'Company name', 'rules' => 'trim|required|xss_clean' ),
+				array( 'field' => 'industry', 'label' => 'Industry', 'rules' => 'trim|required|xss_clean' ),
+				array( 'field' => 'contact_no', 'label' => 'Contact no', 'rules' => 'trim|required|xss_clean' ),
+				array( 'field' => 'company_employes', 'label' => 'Company employes', 'rules' => 'trim|required|xss_clean' ),
+				array( 'field' => 'address', 'label' => 'Address', 'rules' => 'trim|required|xss_clean' ),
+				array( 'field' => 'state', 'label' => 'State', 'rules' => 'trim|required|xss_clean' ),
+				array( 'field' => 'city', 'label' => 'City', 'rules' => 'trim|required|xss_clean' ),
+				array( 'field' => 'pincode', 'label' => 'Pincode', 'rules' => 'trim|required|xss_clean' ),
+				array( 'field' => 'website', 'label' => 'Website', 'rules' => 'trim|required|xss_clean' ),
+				array( 'field' => 'about_company', 'label' => 'About company', 'rules' => 'trim|required|xss_clean' ),
 		);
-		if(!empty($data))
+		
+		if($this->input->post('id') == 0)
 		{
+			array_push($config, 
+				array( 'field' => 'email', 'label' => 'Email', 'rules' => 'trim|required|valid_email|xss_clean' ),
+				array( 'field' => 'password', 'label' => 'Password', 'rules' => 'trim|required|xss_clean' )
+			);
+		}
+		
+
+		$isFileUpload = false;
+		$error = '';
+		if(!empty(trim($_FILES['company_logo']['name'])))
+		{
+			$isFileUpload = true;
+			if($_FILES['company_logo']['error'] > 0)
+				$error = 'File upload failed. Please check the file and retry.';
+				else
+				{
+					//set filename in config for upload
+					$FileName = $_FILES['company_logo']['name'];
+					$name_arr=explode(".", $FileName);
+					$FileName = "logo_".time()."_".$name_arr[0];
+					$configFileUpload=array();
+					$configFileUpload['file_name'] = $FileName;
+					$configFileUpload['upload_path'] = './upload/logo/';
+					$configFileUpload['allowed_types'] = 'gif|jpg|png';
+					$configFileUpload['max_size']	= '512';
+					$this->load->library('upload', $configFileUpload);
+					if( ! $this->upload->do_upload('company_logo') )
+						$error = $this->upload->display_errors();
+						$companyLogo = $this->upload->data();
+						if($error == '' && $companyLogo['is_image'] == 1)
+						{
+							unset($_POST['company_logo']);
+							$_POST['logo']=$companyLogo['file_name'];
+						}
+						else
+						{
+							$this->_deleteFile($companyLogo['full_path']);
+							$error = 'File upload failed. Please check the file and retry.';
+						}
+				}
+		}
+		
+		$this->form_validation->set_rules($config);
+		if ($this->form_validation->run() == FALSE || ($isFileUpload == true && $error != ''))
+		{
+			$this->session->set_flashdata('msg', '<div class="alert alert-danger text-center">'.validation_errors().'<p>'.$error.'</p></div>');
+		}
+		elseif(!empty($_POST))
+		{
+			$data = $this->input->post();
 			$data['mode'] =trim($data['mode']);
-			$password = $data['conf_password'];
-			unset($data['conf_password']);
-			$data['password'] = $this->encrypt->encode($password);
+			unset($data['state']);
+			if(isset($data['conf_password']))
+			{
+				$password = $data['conf_password'];
+				unset($data['conf_password']);
+				$data['password'] = $this->encrypt->encode($password);
+			}
+			$logoPath = '';
+			if(isset($data['id']) && $isFileUpload == true)
+				$logoPath = $this->Employer_model->get_logo($data['id']);
 			$success=$this->Employer_model->add_update($data);
 			if($success>0)
 			{
@@ -120,6 +203,8 @@ class Employer extends CI_Controller {
 				 	$this->registration_mail($sendData);
 				}else
 				{
+					if($logoPath != '')
+						$this->_deleteFile($companyLogo['file_path'].$logoPath);
 				 	$this->session->set_flashdata('msg', '<div class="alert alert-success text-center">Profile updated successfully!</div>');
 				}
 			}else
@@ -134,16 +219,11 @@ class Employer extends CI_Controller {
 			}
 		}
 
-		if($data['mode']=='create')
-		{
-	   	redirect(base_url().'employer');
-	   }
-	   else
-	   {
-	   	redirect(base_url().'employer/my_profile/'.$data['id']);
-	   }
-
-
+		if ($data ['mode'] == 'create') {
+			redirect ( base_url () . 'employer' );
+		} else {
+			redirect ( base_url () . 'employer/my_profile/' . $data ['id'] );
+		}
 	   	//redirect(base_url().'employer');
 	}
 

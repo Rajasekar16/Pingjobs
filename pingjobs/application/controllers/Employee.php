@@ -110,25 +110,59 @@ class Employee  extends CI_Controller {
 
 	public function add_update()
 	{
-
 		$responseData=array();
 		$responseData['status']=AJAX_ERROR;
 		$responseData['msg']=AJAX_MSG;
 		$responseData['data']=array();
 		$sendData=array();
 		$status=$msg=$data='';
-		if(!empty($_POST))
+		
+		$config = array(
+				array( 'field' => 'id','label' => 'status', 'rules'=> 'trim|integer|xss_clean' ),
+				array( 'field' => 'employee_resume_url','label' => 'status', 'rules'=> 'trim|xss_clean' ),
+				array( 'field' => 'employee_resume_name','label' => 'About company', 'rules'=> 'trim|xss_clean' ),
+				array( 'field' => 'employee_name','label' => 'Email', 'rules'=> 'trim|required|xss_clean' ),
+				array( 'field' => 'employee_email','label' => 'Contact Person', 'rules'=> 'trim|required|valid_email|is_unique[employee.email]|xss_clean'),
+				array( 'field' => 'employee_password','label' => 'Company Name',  'rules'=> 'trim|required|xss_clean'	),
+				array( 'field' => 'employee_exp_year','label' => 'address',  'rules'=> 'trim|numeric|xss_clean' ),
+				array( 'field' => 'employee_exp_month','label' => 'Industry',  'rules'=> 'trim|numeric|xss_clean'),
+				array( 'field' => 'employee_current_company','label' => 'Contact No', 'rules'=> 'trim|xss_clean' ),
+				array( 'field' => 'employee_current_from_date','label' => 'Contact No', 'rules'=> 'trim|xss_clean' ),
+				array( 'field' => 'employee_current_to_date','label' => 'Contact No', 'rules'=> 'trim|xss_clean' ),
+				array( 'field' => 'employee_current_salary','label' => 'Contact No', 'rules'=> 'trim|xss_clean' ),
+				array( 'field' => 'employee_expected_salary','label' => 'Contact No', 'rules'=> 'trim|xss_clean' ),
+				array( 'field' => 'employee_skills','label' => 'Contact No', 'rules'=> 'trim|xss_clean' ),
+				array( 'field' => 'employee_notice','label' => 'Contact No', 'rules'=> 'trim|xss_clean' ),
+				array( 'field' => 'employee_industry','label' => 'Contact No', 'rules'=> 'trim|numeric|xss_clean' ),
+				array( 'field' => 'employee_functional','label' => 'Contact No', 'rules'=> 'trim|numeric|xss_clean' ),
+				array( 'field' => 'traing_course','label' => 'Contact No', 'rules'=> 'trim|xss_clean' ),
+				array( 'field' => 'traing_certificates','label' => 'Contact No', 'rules'=> 'trim|xss_clean' ),
+				array( 'field' => 'employee_edu_basic','label' => 'Contact No', 'rules'=> 'trim|xss_clean' ),
+				array( 'field' => 'employee_edu_master','label' => 'Contact No', 'rules'=> 'trim|xss_clean' ),
+				array( 'field' => 'employee_address','label' => 'Contact No', 'rules'=> 'trim|xss_clean' ),
+				array( 'field' => 'employee_city','label' => 'Contact No', 'rules'=> 'trim|required|numeric|xss_clean' ),
+				array( 'field' => 'employee_pincode','label' => 'Contact No', 'rules'=> 'trim|numeric|xss_clean' ),
+				array( 'field' => 'employee_mobile_no','label' => 'Contact No', 'rules'=> 'trim|required|numeric|xss_clean' ),
+				array( 'field' => 'mode','label' => 'Contact No', 'rules'=> 'trim|required|xss_clean' )
+			);
+		$this->form_validation->set_rules($config);
+		if ($this->form_validation->run() == FALSE)
 		{
-		$_POST['mode'] =trim($_POST['mode']);
-			$_POST['employee_current_from_date'] = date('Y-m-d',strtotime($_POST['employee_current_from_date']));
-			$_POST['employee_current_to_date'] = date('Y-m-d',strtotime($_POST['employee_current_to_date']));
-			$success=$this->Employee_model->add_update($_POST);
+			$responseData['msg']=validation_errors();
+		}
+		elseif(!empty($_POST))
+		{
+			$data = $this->input->post();
+			$data['mode'] =trim($data['mode']);
+			$data['employee_current_from_date'] = date('Y-m-d',strtotime($data['employee_current_from_date']));
+			$data['employee_current_to_date'] = date('Y-m-d',strtotime($data['employee_current_to_date']));
+			$success=$this->Employee_model->add_update($data);
 			if($success>0)
 			{
 				$responseData['status']=AJAX_SUCCESS;
-				if($_POST['mode']=='create')
+				if($data['mode']=='create')
 				{
-				 	$sendData=$_POST;
+				 	$sendData=$data;
 				 	$sendData['employee_id']=$success;
 				 	$this->registration_mail($sendData);
 					$responseData['msg']='Registration completed Activator link sent your email. Please click the link and activate your account!';
@@ -139,7 +173,7 @@ class Employee  extends CI_Controller {
 			}
 			else
 			{
-				if($_POST['mode']=='create')
+				if($data['mode']=='create')
 				{
 					$responseData['msg']='Registration Failed!';
 				}else

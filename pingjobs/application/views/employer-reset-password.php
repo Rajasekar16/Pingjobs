@@ -2,12 +2,13 @@
     <!-- Begin page content -->
     <div class="container container-home signup-forms">
       <div class="row">
-        <div class="col-md-2">
-          <img src="images/logos.jpg" />
-        </div>
-        <div class="col-md-10 box">
+        <!--<div class="col-md-2">
+           <img src="<?php echo base_url();?>images/logo.png" /> 
+        </div>-->
+        <div class="col-md-12 box">
           <h2 class="light page-header">Reset Password</h2>
-            <form class="form-horizontal" method="post"  id ="reset_password" onsubmit="return emplyee_resetpassword()"  >
+            <!-- <form class="form-horizontal" method="post"  id ="reset_password" onsubmit="return emplyee_resetpassword()"  > -->
+            <?php echo form_open("",array("class"=>"form-horizontal","id"=>"reset_password","onsubmit"=>"return emplyee_resetpassword()")); ?>
               <div class="col-md-6">
                <div class="alert alert-success" style="display:none" >
               

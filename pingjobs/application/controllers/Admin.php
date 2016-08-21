@@ -437,14 +437,16 @@ class Admin extends CI_Controller {
 		}
 
 		$data['update_url'] = base_url().'admin/jobadd_update';
-		$data['addBy']='admin';
 		if(isset($this->session->userdata['loggedin_admin'])) {
+			$data['addBy']='admin';
 			$this->_loadAdminView('postjob',$data);
-        }else{
+        }else if(isset($this->session->userdata['loggedin_employer']['id'])){
+			$data['employer_id']=$this->session->userdata['loggedin_employer']['id'];
 			$data['header']=$this->load->view('includes/header', $data, true);
 			$data['footer']=$this->load->view('includes/footer', $data, true);
 			$this->load->view("postjob",$data);
 		}
+		else redirect(base_url());
 	}
 	
 	public function jobadd_update()

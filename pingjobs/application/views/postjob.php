@@ -11,7 +11,7 @@ if(!empty($job))
 	$editId = $job_data['id'];
 }
 else
-{
+{	
 	if(!empty($employer))
 	{
 		$employer= $employer[0];
@@ -57,20 +57,27 @@ else
 			</div>
 			<!-- Select Employer -->
 			  <div class="form-group required">
-				<label class="col-md-5 control-label" for="selectbasic">Employer</label>
+				<label class="col-md-5 control-label" for="selectbasic">Employer </label>
 				<div class="col-md-7">
+				  <?php if(!isset($employer_id)): ?>
 				  <select id="employer_id" name="employer_id" class="form-control" required>
 					<option value="" >--Select--</option>
 					<?php foreach($employers as $row) { ?> 
-						<option value="<?php echo $row['id'];?>" <?php echo ($row['id'] == @$job_data['employer_id'])? 'selected="selected"':''; ?>><?php echo ucfirst($row['company_name']);?></option>
-					  <?php } ?>
+						<option value="<?php echo $row['id'];?>" <?php echo ($row['id'] == @$job_data['employer_id']) ? 'selected="selected"':''; ?>><?php echo ucfirst($row['company_name']);?></option>
+					<?php } ?>
 				  </select>
+				  <?php else:
+				  foreach($employers as $row) {
+						if($row['id'] == @$employer_id) { ?> 
+							<input type="text" class="form-control" disabled="disabled" value="<?php echo $row['company_name']; ?>" required />
+							<input type="hidden" id="employer_id" name="employer_id" value="<?php echo $row['id']; ?>" required />
+				  <?php } } endif; ?>
 				</div>
 			  </div>
 			  
 
 			  <div class="form-group required">
-				<label class="col-md-5 control-label" for="textinput">Job title</label>  
+				<label class="col-md-5 control-label" for="textinput">Job title </label>  
 				<div class="col-md-7">
 				<input id="job_title" name="job_title" type="text"  placeholder="Enter Job Title" class="form-control input-md" required="required" value="<?php echo @$job_data['job_title'] ?>"  required>                      
 				</div>
@@ -78,7 +85,7 @@ else
 
 			  <!-- Text input-->
 			  <div class="form-group required">
-				<label class="col-md-5 control-label" for="textinput">Job Description</label>  
+				<label class="col-md-5 control-label" for="textinput">Job Description </label>  
 				<div class="col-md-7">
 				<textarea class="form-control input-md" maxlength="1000" placeholder="Enter Job Description" id="job_desc" name="job_desc" required><?php echo @$job_data['job_desc'] ?></textarea>
 				  
@@ -244,10 +251,10 @@ else
 			  <label class="col-md-5 control-label" for="selectbasic">Job status</label>
 			  <div class="col-md-7">
 				<select id="job_status" name="job_status" class="form-control">
-					<option value="1">Created</option>
-					<option value="2">Approved</option>
-					<option value="3">Expire</option>
-					<option value="4">De-activated</option>
+					<option value="1" <?php echo (@$job_data['job_status'] == 1) ? 'selected="selected"':''; ?>>Created</option>
+					<option value="2" <?php echo (@$job_data['job_status'] == 2) ? 'selected="selected"':''; ?>>Approved</option>
+					<option value="3" <?php echo (@$job_data['job_status'] == 3) ? 'selected="selected"':''; ?>>Expire</option>
+					<option value="4" <?php echo (@$job_data['job_status'] == 4) ? 'selected="selected"':''; ?>>De-activated</option>
 				</select>
 			  </div>
 			</div>
@@ -267,6 +274,7 @@ else
 		   <div class="col-md-12">
 			  <div>
 				<div class="col-md-2"></div>  
+			    <input type="hidden" id="job_status" name="job_status" value="1">
 				<input type="checkbox"  checked="checked" id="terms" value="2"> We agree to the <a>Terms of Use</a> &amp; <a>Privacy Policy</a>
 			  </div>
 		  </div>
@@ -452,7 +460,7 @@ function postJobFrm()
 	  if(response.status == 'ok')
 	  {             
 		 //window.location=response.data;
-		 $('#postJob').trigger("reset");
+		 //$('#postJob').trigger("reset");
 		 $('.alert-success').html(response.msg).show();
 
 		 /* setTimeout(function(){

@@ -97,7 +97,7 @@ class Employee_model extends CI_Model
             {
                 if(@$data['employee_password'] != '')
                 {
-                $data['employee_password'] = encrypt_lsa_pass(trim($data['employee_password']));
+                	$data['employee_password'] = $this->encrypt->encode(trim($data['employee_password']));
                 }
                 $this->db->insert($table_name,$data);
                 // echo $this->db->last_query(); die();          

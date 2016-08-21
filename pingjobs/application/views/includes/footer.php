@@ -77,7 +77,7 @@
               <input id="employee_password" name="employee_password" type="password" placeholder="Enter Password" class="form-control input-md" required="">
           </div>
           <div class="form-group">
-              New User? <a href="<?php echo SITE_URL?>employee"><strong>Register Now</strong></a> | <a href="/employee/reset_password">Forgot Password?</a>
+              New User? <a href="<?php echo SITE_URL?>employee"><strong>Register Now</strong></a> | <a href="<?php echo SITE_URL?>employee/reset_password">Forgot Password?</a>
           </div>
       </div>
       <div class="modal-footer">
@@ -150,7 +150,7 @@
           </div>
 
           <div class="form-group">
-              New User?<a href="<?php  echo SITE_URL;?>employer"><strong>Register Now</strong></a> | <a href="/employer/reset_password">Forgot Password?</a>
+              New User?<a href="<?php  echo SITE_URL;?>employer"><strong>Register Now</strong></a> | <a href="<?php echo SITE_URL?>employer/reset_password">Forgot Password?</a>
           </div>
 
       </div>
@@ -209,7 +209,8 @@
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
         <h4 class="modal-title" id="myModalLabel">Employee Details</h4>
       </div>
-     <form class="form-horizontal" method="post" action="<?php echo SITE_URL; ?>admin/resume_search">
+     <!-- <form class="form-horizontal" method="post" action="<?php echo SITE_URL; ?>admin/resume_search"> -->
+     <?php echo form_open("admin/resume_search",array("class"=>"form-horizontal")); ?>
         <div class="modal-body">
 
           <div class="form-group">

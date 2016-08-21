@@ -20,7 +20,7 @@
                     <?php }else{?>
                    
 
-                      <button data-toggle="modal" data-target="#employerlogin"  class="btn btn-primary">Login to Apply</button> &nbsp;&nbsp;&nbsp;
+                      <button data-toggle="modal" data-target="#employeelogin"  class="btn btn-primary">Login to Apply</button> &nbsp;&nbsp;&nbsp;
                     
                     <?php } ?>
                   </div>
