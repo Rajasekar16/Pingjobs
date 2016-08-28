@@ -57,7 +57,7 @@
 <div class="modal" id="employeelogin" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog">
 	<?php
-	echo form_open('javascript:;',array('class'=>"form-horizontals","id"=>"employee-form-login","onsubmit"=>"return login_employee();"));
+	echo form_open('',array('class'=>"form-horizontals","id"=>"employee-form-login","onsubmit"=>"return login_employee();"));
 	?>
     <div class="modal-content">
       <div class="modal-header">
@@ -70,11 +70,11 @@
       </div>
       
           <div class="form-group">
-              <input id="employee_email"  name="employee_email" type="email" placeholder="Enter Username" class="form-control input-md" required="">
+              <input id="employee_email"  name="employee_email" type="email" placeholder="Enter Username" class="form-control input-md" required="required">
           </div>
 
           <div class="form-group">
-              <input id="employee_password" name="employee_password" type="password" placeholder="Enter Password" class="form-control input-md" required="">
+              <input id="employee_password" name="employee_password" type="password" placeholder="Enter Password" class="form-control input-md" required="required">
           </div>
           <div class="form-group">
               New User? <a href="<?php echo SITE_URL?>employee"><strong>Register Now</strong></a> | <a href="<?php echo SITE_URL?>employee/reset_password">Forgot Password?</a>
@@ -93,35 +93,35 @@
     gBaseUrl = "<?php echo base_url(); ?>";  
     function login_employee()
     {
-      if($('#employee_email').val() != ''  &&  $('#employee_password').val() != '' )
+      if($('#employee-form-login').valid() && $('#employee-form-login #employee_email').val() != ''  &&  $('#employee-form-login #employee_password').val() != '' )
       {
-      $.ajax({
-        url: gBaseUrl+'/employee/verify_login/',
-        type: 'POST',
-        data:$('#employee-form-login').serialize(),
-        dataType: 'json',
-        success: function(response){
-          if(response.status == 'ok')
-          {             
-             window.location=response.data;
-          }
-          else
-          {
-            $('.alert-danger').html(response.msg).show();
-            //$('.input-lg').addClass('input-alert');
-
-            setTimeout(function(){
-              // $('.alert-danger').html(response.msg);
-              $('.alert-danger').hide();
-              $('.input-lg').removeClass('input-alert');
-            }, 3000);
-          }
-        },
-        error: function(res){
-        }
-      });
+	      $.ajax({
+	        url: gBaseUrl+'/employee/verify_login/',
+	        type: 'POST',
+	        data:$('#employee-form-login').serialize(),
+	        dataType: 'json',
+	        success: function(response){
+	          if(response.status == 'ok')
+	          {             
+	             window.location=response.data;
+	          }
+	          else
+	          {
+	            $('.alert-danger').html(response.msg).show();
+	            //$('.input-lg').addClass('input-alert');
+	
+	            setTimeout(function(){
+	              // $('.alert-danger').html(response.msg);
+	              $('.alert-danger').hide();
+	              $('.input-lg').removeClass('input-alert');
+	            }, 3000);
+	          }
+	        },
+	        error: function(res){
+	        }
+	      });
+	    }
       return false;
-    }
     }
     </script>
 
@@ -129,7 +129,7 @@
 <div class="modal" id="employerlogin" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog">
 	<?php
-	echo form_open('employer/verify_login',array('class'=>"form-horizontals","role"=>"login","id"=>"form-login","onsubmit"=>"return login();"));
+	echo form_open('',array('class'=>"form-horizontals","role"=>"login","id"=>"form-login","onsubmit"=>"return login();"));
 	?>
     <div class="modal-content">
       <div class="modal-header">
@@ -142,11 +142,11 @@
       </div>
 
           <div class="form-group">
-              <input id="employer_email" name="email" type="email" placeholder="Enter Username" class="form-control input-md" required="">
+              <input id="employer_email" name="email" type="email" placeholder="Enter Username" class="form-control input-md" required="required">
           </div>
 
           <div class="form-group">
-              <input id="employer_password" name="password" type="password" placeholder="Enter Password" class="form-control input-md" required="">
+              <input id="employer_password" name="password" type="password" placeholder="Enter Password" class="form-control input-md" required="required">
           </div>
 
           <div class="form-group">
@@ -168,7 +168,8 @@
     gBaseUrl = "<?php echo base_url(); ?>";  
     function login()
     {
-      if($('#employer_email').val() != ''  &&  $('#employer_password').val() != '' )
+        
+      if($('#form-login').valid() && $('#form-login #employer_email').val() != ''  &&  $('#form-login #employer_password').val() != '' )
       {
       $.ajax({
         url: gBaseUrl+'/employer/verify_login/',
@@ -195,8 +196,8 @@
         error: function(res){
         }
       });
-      return false;
     }
+      return false;
     }
     </script>
 

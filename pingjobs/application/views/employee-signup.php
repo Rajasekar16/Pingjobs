@@ -20,6 +20,7 @@ $employee_skills =@$employee['employee_skills'];
 $employee_edu_master =@$employee['employee_edu_master'];
 $employee_edu_basic =@$employee['employee_edu_basic'];
 $employee_address =@$employee['employee_address'];
+$employee_state=@$employee['employee_state'];
 $employee_city =@$employee['employee_city'];
 $employee_pincode =@$employee['employee_pincode'];
 $employee_mobile_no =@$employee['employee_mobile_no'];
@@ -58,9 +59,8 @@ if($year<1980){$employee_current_to_date = date('Y/m/d');}
     <div class="container container-home signup-forms">
       <div class="row">
         <div class="col-md-12 box">
-                  <!-- <h2 class="light page-header">Employee Signup</h2> 
-			<form style="display: none;" method="post" id="resume_upload_form"
-				enctype="multipart/form-data">-->
+          <h2 class="light page-header"><?php echo ($id) ? 'Edit Profile' : 'Employee Signup';?></h2>
+            <!--<form style="display: none;" method="post" id="resume_upload_form" enctype="multipart/form-data">-->
 			<?php echo form_open_multipart("",array("id"=>"resume_upload_form","style"=>"display: none;")); ?>
 				<input type="file" id="resume_upload" name="resume_upload" />
 			</form>
@@ -126,9 +126,8 @@ if($year<1980){$employee_current_to_date = date('Y/m/d');}
                     <div class="col-xs-5ths">
                       <select id="employee_exp_year" name="employee_exp_year" class="form-control" required="required" >
                         <option value="">Years</option>
-                        <option value="0">Freshers</option>
                         <?php 
-                        for($i=1;$i<=30;$i++)
+                        for($i=0;$i<=30;$i++)
                         {
                           $selected ="";
                           if($employee_exp_year == $i)
@@ -136,7 +135,7 @@ if($year<1980){$employee_current_to_date = date('Y/m/d');}
                             $selected ="selected";
                           }
                           ?>
-                            <option   <?php  echo $selected; ?> value="<?php echo $i; ?>"><?php echo $i; ?></option>
+                            <option   <?php  echo $selected; ?> value="<?php echo $i; ?>"><?php echo ($i==0)? "Fresher" : $i; ?></option>
                         <?php } ?>
 
 
@@ -145,9 +144,8 @@ if($year<1980){$employee_current_to_date = date('Y/m/d');}
                     <div class="col-xs-5ths">
                       <select id="employee_exp_month" name="employee_exp_month" class="form-control">
                         <option value="">Months</option>
-                        <option value="0">0</option>
                         <?php 
-                        for($i=1;$i<=12;$i++)
+                        for($i=0;$i<=12;$i++)
                            {
                            $selected ="";
                           if($employee_exp_month == $i)
@@ -209,7 +207,7 @@ if($year<1980){$employee_current_to_date = date('Y/m/d');}
                   <label class="col-md-5 control-label" for="employee_edu_basic" >Current Salary</label>
                   <div class="col-md-7">
                     <select id="employee_current_salary" name="employee_current_salary" class="form-control input-md">
-                        <option value="">Select Education</option>
+                        <option value="">Select Salary</option>
                         <?php 
                         foreach($salary as $row)
                         {
@@ -229,7 +227,7 @@ if($year<1980){$employee_current_to_date = date('Y/m/d');}
                   <label class="col-md-5 control-label" for="employee_edu_basic" >Expected Salary</label>
                   <div class="col-md-7">
                     <select id="employee_expected_salary" name="employee_expected_salary" class="form-control input-md">
-                        <option value="">Select Education</option>
+                        <option value="">Select Salary</option>
                         <?php 
                         foreach($salary as $row)
                         {
@@ -261,7 +259,7 @@ if($year<1980){$employee_current_to_date = date('Y/m/d');}
                     <label class="col-md-5 control-label" for="textinput">Notice Period(Days)</label>  
                     <div class="col-md-7">
                     <input id="employee_notice" name="employee_notice"  title="Notice period for only threee digit number"  
-                       type="number" min="1" placeholder="Enter Notice Period" class="form-control input-md number-only" value ="<?php  echo  $employee_notice; ?>" >
+                       type="number" maxlength="3" placeholder="Enter Notice Period" class="form-control input-md number-only" value ="<?php  echo  $employee_notice; ?>" >
                       
                     </div>
                   </div>
@@ -281,7 +279,7 @@ if($year<1980){$employee_current_to_date = date('Y/m/d');}
                    <div style="position:relative;">
                   
 
-          <a id="uploadresumetrigger" class="btn btn-danger btn-action" data-toggle="tooltip" data-placement="left" data-title="Upload Credential">Upload</a></h4>
+          <a id="uploadresumetrigger" class="btn btn-danger btn-action" data-toggle="tooltip" data-placement="left" data-title="Upload Resume">Upload</a></h4>
          
 
                     &nbsp;
@@ -335,7 +333,7 @@ if($year<1980){$employee_current_to_date = date('Y/m/d');}
                           {
                             $selected ="selected";
                           } ?>
-                          <option  <?php  echo $selected; ?>value="<?php echo $row['id']; ?>"><?php echo $row['name']; ?> </option>
+                          <option  <?php  echo $selected; ?> value="<?php echo $row['id']; ?>"><?php echo $row['name']; ?> </option>
                         <?php } ?>                      
                     </select>
                   </div>
@@ -443,10 +441,34 @@ if($year<1980){$employee_current_to_date = date('Y/m/d');}
                 </div>
 
                 <!-- Text input-->
-                <div class="form-group">
+                <div class="form-group required">
+                  <label class="col-md-5 control-label" for="employee_state">State</label>  
+                  <div class="col-md-7">
+                  <select id="employee_state" name="employee_state" class="form-control input-md" required="required">
+                  	<option value=''>Select State</option>
+                  	<?php foreach ($state as $states){
+                  		$selected='';
+                  		if($employee_state == $states['id'])
+                  			$selected=' selected = "selected" ';
+                  		echo '<option value="'.$states['id'].'" '.$selected.'>'.$states['name'].'</option>';
+                  	} ?>
+                  </select>
+                  </div>
+                </div>
+
+                <!-- Text input-->
+                <div class="form-group required">
                   <label class="col-md-5 control-label" for="employee_city">City</label>  
                   <div class="col-md-7">
-                  <input id="employee_city" name="employee_city" type="text"  maxlength="30" placeholder="Enter City Name" class="form-control input-md char-only"   value ="<?php  echo  $employee_city; ?>"  >
+                  <select id="employee_city" name="employee_city" class="form-control input-md" required="required">
+                  	<option value=''>Select City</option>
+                  	<?php foreach ($city as $cities){
+                  		$selected='';
+                  		if($employee_city == $cities['id'])
+                  			$selected=' selected = "selected" ';
+                  		echo '<option value="'.$cities['id'].'" '.$selected.'>'.$cities['name'].'</option>';
+                  	} ?>
+                  </select>
                   </div>
                 </div>
 
@@ -463,11 +485,11 @@ if($year<1980){$employee_current_to_date = date('Y/m/d');}
                 <div class="form-group required">
                   <label class="col-md-5 control-label" for="employee_mobile_no"  >Mobile Number</label>  
                   <div class="col-md-7">
-                  <input id="employee_mobile_no" name="employee_mobile_no" pattern="[789][0-9]{9}" title="Phone number  start with 7-9 and remaing 9 digit with 0-9"   type="text" placeholder="Enter Mobile Number" class="form-control input-md number-only"  required=""  value ="<?php  echo  $employee_mobile_no; ?>" >
+                  <input id="employee_mobile_no" name="employee_mobile_no" pattern="[789][0-9]{9}" title="Phone number  start with 7-9 and remaing 9 digit with 0-9"   type="text" placeholder="Enter Mobile Number" class="form-control input-md number-only"  required="required" minlength="10" maxlength="12"  value ="<?php  echo  $employee_mobile_no; ?>" >
                   <div class="errorBox"></div>
                    </div>
                 </div>
-
+				<?php  echo @$captcha; ?>
                 </div> 
               <div class="clearfix"></div>
 

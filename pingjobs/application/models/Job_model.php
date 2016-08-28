@@ -35,55 +35,6 @@ class Job_model extends CI_Model
         return $query->num_rows();
     }
 	
-	public function get_jobs_by_skills($skills=array())
-	{
-		$result = array();
-		if(empty($skills))
-			return $result;
-			
-		$this->db->select('job_id');
-		$this->db->where('status',1);
-        $this->db->where_in('skills_id',$skills);
-        $query=$this->db->get('job_skills_mapping');
-		
-		if($query->num_rows() == 0)
-			return $result;
-		
-		foreach ($query->result_array() as $row)
-		{
-			if(!in_array($row['job_id'], $result))
-				array_push($result,$row['job_id']);
-		}
-		$query->free_result(); // The $query result object will no longer be available
-
-        return $result;
-	}
-	
-	public function get_skills_by_jobId($jobId=array())
-	{
-		$result = array();
-		if(empty($jobId))
-			return $result;
-			
-		$this->db->select('skills_id,job_id');
-		$this->db->where('status',1);
-        $this->db->where_in('job_id',$jobId);
-        $query=$this->db->get('job_skills_mapping');
-		
-		if($query->num_rows() == 0)
-			return $result;
-			
-		foreach ($query->result_array() as $row)
-		{
-			if(!isset($result[$row['job_id']]))
-				$result[$row['job_id']] = array();
-			array_push($result[$row['job_id']],$row['skills_id']);
-		}
-		$query->free_result(); // The $query result object will no longer be available
-
-        return $result;
-	}
-	
 	public function get_jobs_by_education($education=array())
 	{
 		$result = array();
@@ -139,6 +90,7 @@ class Job_model extends CI_Model
                             //education.name as education_name,
         $result=array();
         $this->db->select('job.id as id,
+                            job.job_name,
                             job.job_title,
                             job.job_desc,
                             job.job_experience_from,
@@ -151,9 +103,13 @@ class Job_model extends CI_Model
                             job.job_education_spe,
                             job.job_location_id as country_name,
                             job.post_date as post_date,
+                            job.job_key_skills as job_key_skill,
+        					job_type.name as job_type_name,
                             industry.name as industry_name,
                             functional.name as functional_name,
+                            industry.name as industry_name,
                             location.name as location_name,
+        					skills.name as primary_skills,
                             employer.logo as company_logo,
                             employer.company_name as job_company_name,
                             employer.company_name as company_name,
@@ -166,7 +122,8 @@ class Job_model extends CI_Model
         $this->db->join('functional','functional.id=job.job_functional_id','left');
         $this->db->join('location','location.id=job.job_location_id','left');
         $this->db->join('employer','employer.id=job.employer_id','left');
-        //$this->db->join('education','education.id=job.job_education_id','left');
+        $this->db->join('skills','skills.id=job.skills','left');
+        $this->db->join('job_type','job_type.id=job.job_type_id','left');
         $this->db->where('job_status <> ',3);
         if(!@$this->session->userdata['loggedin_employer'] && !@$this->session->userdata['loggedin_admin'])
         {
@@ -182,13 +139,13 @@ class Job_model extends CI_Model
             }
         }
         
-        /*if(isset($data['skills']))
+        if(isset($data['skills']))
         {
             if($data['skills']!='')
             {
                 $this->db->where($data['skills']);
             }
-        }*/
+        }
 
         if(isset($data['location']))
         {
@@ -233,6 +190,20 @@ class Job_model extends CI_Model
                 $this->db->where($data['premium_jobs']);
             }
         }
+		if(isset($data['job_type_id']))
+        {
+            if($data['job_type_id']!='')
+            {
+                $this->db->where($data['job_type_id']);
+            }
+        }
+		if(isset($data['where']))
+        {
+            if($data['where']!='')
+            {
+                $this->db->where($data['where']);
+            }
+        }
         if(isset($data['orderby']))
         {
             if($data['orderby']!='')
@@ -255,21 +226,12 @@ class Job_model extends CI_Model
 
         
         $query=$this->db->get('job');
-		#echo $this->db->last_query();
+		//echo $this->db->last_query();
 		$result = array();
 		foreach($query->result_array() AS $row)
 		{
-			$skill_id = $this->get_skills_by_jobId( array($row['id']) );
 			$education_id = $this->get_education_by_jobId( array($row['id']) );
-			$row['job_key_skill'] = '';
 			$row['education_name'] = '';
-			if(isset($skill_id[$row['id']]))
-			{
-				$data = array();
-				$data['table_name'] = "skills";
-				$data['where'] = " id IN (".implode(",",$skill_id[$row['id']]).") ";
-				$row['job_key_skill'] = implode(", ",array_column($this->Common_model->get_master($data),"name"));
-			}
 			if(isset($education_id[$row['id']]))
 			{
 				$data = array();

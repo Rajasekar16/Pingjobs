@@ -53,21 +53,24 @@ class Employer extends CI_Controller {
 			$master_data['where']=' status=1';
 		$data['company_type_array']=$this->Common_model->get_master($master_data);
 		
+		$data['captcha']=$this->Common_model->get_captcha();
+
+		if($this->input->post('company_type'))
+			$data['employer'][0] = $this->input->post();
+		
 		$data['header']=$this->load->view('includes/header', $data, true);
 		$data['footer']=$this->load->view('includes/footer', $data, true);
 		$this->load->view('employer-signup',$data);
-		
-
 	}
+	
 	public function my_profile($employer_id=0)
 	{
-		if($employer_id==0 || isset($this->session->userdata['loggedin_employer']))
-		{
-			if(isset($this->session->userdata['loggedin_employer']))
-				$employer_id=$this->session->userdata['loggedin_employer']['id'];
-			else
-				redirect(base_url());
-		}
+		if(isset($this->session->userdata['loggedin_admin']))
+			$employer_id = ($employer_id==0) ? $this->session->userdata['loggedin_admin']['id'] : $employer_id;
+		else if(isset($this->session->userdata['loggedin_employer']))
+			$employer_id = $this->session->userdata['loggedin_employer']['id'];
+		else
+			redirect(base_url());
 			
 		$data=array();
 		$master_data=array();
@@ -113,6 +116,9 @@ class Employer extends CI_Controller {
 	
 	public function add_update()
 	{
+		if(!$this->input->post('company_type'))
+			redirect ( base_url () . 'employer' );
+		
 		$config = array(
 				array( 'field' => 'id', 'label' => 'ID', 'rules' => 'trim|xss_clean' ),
 				array( 'field' => 'company_type', 'label' => 'Company type', 'rules' => 'trim|required|xss_clean' ),
@@ -125,7 +131,7 @@ class Employer extends CI_Controller {
 				array( 'field' => 'state', 'label' => 'State', 'rules' => 'trim|required|xss_clean' ),
 				array( 'field' => 'city', 'label' => 'City', 'rules' => 'trim|required|xss_clean' ),
 				array( 'field' => 'pincode', 'label' => 'Pincode', 'rules' => 'trim|required|xss_clean' ),
-				array( 'field' => 'website', 'label' => 'Website', 'rules' => 'trim|required|xss_clean' ),
+				array( 'field' => 'website', 'label' => 'Website', 'rules' => 'trim|xss_clean' ),
 				array( 'field' => 'about_company', 'label' => 'About company', 'rules' => 'trim|required|xss_clean' ),
 		);
 		
@@ -136,8 +142,16 @@ class Employer extends CI_Controller {
 				array( 'field' => 'password', 'label' => 'Password', 'rules' => 'trim|required|xss_clean' )
 			);
 		}
+		$captchaError = '';
+		if($this->input->post('captcha'))
+		{
+			array_push($config,
+				array( 'field' => 'captcha', 'label' => 'Password', 'rules' => 'trim|required|xss_clean' )
+			);
+			if($this->Common_model->check_captcha() == false)
+				$captchaError = "You must submit the word that appears in the image";
+		}
 		
-
 		$isFileUpload = false;
 		$error = '';
 		if(!empty(trim($_FILES['company_logo']['name'])))
@@ -174,15 +188,18 @@ class Employer extends CI_Controller {
 		}
 		
 		$this->form_validation->set_rules($config);
-		if ($this->form_validation->run() == FALSE || ($isFileUpload == true && $error != ''))
+		if ($this->form_validation->run() == FALSE || ($captchaError != '') || ($isFileUpload == true && $error != ''))
 		{
-			$this->session->set_flashdata('msg', '<div class="alert alert-danger text-center">'.validation_errors().'<p>'.$error.'</p></div>');
+			$this->session->set_flashdata('msg', '<div class="alert alert-danger text-center">'.validation_errors().'<p>'.$error.'</p><p>'.$captchaError.'</p></div>');
+			$this->index();
+			return false;
 		}
 		elseif(!empty($_POST))
 		{
 			$data = $this->input->post();
 			$data['mode'] =trim($data['mode']);
 			unset($data['state']);
+			unset($data['captcha']);
 			if(isset($data['conf_password']))
 			{
 				$password = $data['conf_password'];
@@ -190,7 +207,7 @@ class Employer extends CI_Controller {
 				$data['password'] = $this->encrypt->encode($password);
 			}
 			$logoPath = '';
-			if(isset($data['id']) && $isFileUpload == true)
+			if(isset($data['id']) && $this->input->post('id') && $isFileUpload == true)
 				$logoPath = $this->Employer_model->get_logo($data['id']);
 			$success=$this->Employer_model->add_update($data);
 			if($success>0)
@@ -218,11 +235,11 @@ class Employer extends CI_Controller {
 				}				
 			}
 		}
-
-		if ($data ['mode'] == 'create') {
+		
+		if ($this->input->post('mode') == 'create') {
 			redirect ( base_url () . 'employer' );
 		} else {
-			redirect ( base_url () . 'employer/my_profile/' . $data ['id'] );
+			redirect ( base_url () . 'employer/my_profile/' . $this->input->post('id') );
 		}
 	   	//redirect(base_url().'employer');
 	}

@@ -306,6 +306,7 @@ class Admin extends CI_Controller {
 			else
 				unset($data['password']);
 			$data['premium_employer'] = isset($data['premium_employer']) ? 1 : 0;
+			$data['link'] = str_replace(' ','-',$data['company_name']);
 			$data['mode'] =trim($data['mode']);
 			$logoPath = '';
 			if(isset($data['id']) && $isFileUpload == true)
@@ -411,7 +412,7 @@ class Admin extends CI_Controller {
 		echo json_encode($json);
 	}
 
-	public function postjob()
+	public function postjob($view="admin")
 	{
 		#$this->_checkAdmin();
 
@@ -430,23 +431,39 @@ class Admin extends CI_Controller {
 			$master_data['where']=' id='.$job_id;
 			$data['job']=$this->Common_model->get_master($master_data);
 			$jobID = $data['job'][0]['id'];
-			$skillsIDs = $this->Job_model->get_skills_by_jobId(array($jobID));
+			if(!$jobID) {
+				if($view != "employer")
+					redirect(base_url()."admin/jobs");
+				else
+					redirect(base_url()."job/listjobs");
+			}
+			else if($view == "employer" && isset($this->session->userdata['loggedin_employer']['id']) && $data['job'][0]['employer_id'] != $this->session->userdata['loggedin_employer']['id'])
+			{
+					redirect(base_url()."job/listjobs");
+			}
 			$educationIDs = $this->Job_model->get_education_by_jobId(array($jobID));
-			$data['job'][0]['skills']=$skillsIDs[$jobID];
 			$data['job'][0]['education']=$educationIDs[$jobID];
 		}
-
+			
 		$data['update_url'] = base_url().'admin/jobadd_update';
-		if(isset($this->session->userdata['loggedin_admin'])) {
-			$data['addBy']='admin';
-			$this->_loadAdminView('postjob',$data);
-        }else if(isset($this->session->userdata['loggedin_employer']['id'])){
+		if($view=="employer") {
 			$data['employer_id']=$this->session->userdata['loggedin_employer']['id'];
 			$data['header']=$this->load->view('includes/header', $data, true);
 			$data['footer']=$this->load->view('includes/footer', $data, true);
 			$this->load->view("postjob",$data);
-		}
-		else redirect(base_url());
+		} else if(isset($this->session->userdata['loggedin_admin']['id'])) {
+			$data['addBy']='admin';
+			$this->_loadAdminView('postjob',$data);
+        }else
+			redirect(base_url());
+	}
+
+	public function postjobs()
+	{
+		if(isset($this->session->userdata['loggedin_employer']['id']))
+			$this->postjob("employer");
+		else
+			redirect(base_url());
 	}
 	
 	public function jobadd_update()
@@ -467,7 +484,8 @@ class Admin extends CI_Controller {
 		   array( 'field' => 'job_functional_id', 'label' => 'job functional id', 'rules' => 'trim|required|xss_clean' ),
 		   array( 'field' => 'job_no_postition', 'label' => 'job no postition', 'rules' => 'trim|required|xss_clean' ),
 		   array( 'field' => 'job_education_spe', 'label' => 'Education', 'rules' => 'trim|required|xss_clean' ),
-		   array( 'field' => 'job_key_skill[]', 'label' => 'job key skill', 'rules' => 'trim|required|xss_clean' ),
+		   array( 'field' => 'job_key_skills', 'label' => 'Key skills', 'rules' => 'trim|required|xss_clean' ),
+		   array( 'field' => 'skills', 'label' => 'Primary skill', 'rules' => 'trim|required|xss_clean' ),
 		   array( 'field' => 'job_education_id[]', 'label' => 'Education Specifications', 'rules' => 'trim|required|xss_clean' ),
 		   array( 'field' => 'job_experience_from', 'label' => 'job experience from', 'rules' => 'trim|xss_clean' ),
 		   array( 'field' => 'job_experience_to', 'label' => 'job experience to', 'rules' => 'trim|xss_clean' ),
@@ -499,9 +517,22 @@ class Admin extends CI_Controller {
 				$data['employer_id'] = @(isset($data['employer_id'])) ? $data['employer_id'] : $this->session->userdata['loggedin_employer']['id'];
 				$data['post_date'] = currentGMT('datetime');
 			}
-			$job_key_skills = $data['job_key_skill'];
+
+			$master_data=array();
+			$master_data['table_name']='employer';
+			$master_data['where']=' id= '.$data['employer_id'];
+			$employers=$this->Common_model->get_master($master_data);
+			$company = array_column($employers, "company_name","id");
+
+			$master_data=array();
+			$master_data['table_name']='location';
+			$master_data['where']=' id= '.$data['job_location_id'];
+			$locations=$this->Common_model->get_master($master_data);
+			$location = array_column($locations, "name","id");
+			
+			$data['job_name'] = str_replace(' ','-',$data['job_title']."-".$company[$data['employer_id']]."-".$location[$data['job_location_id']]);
+			
 			$job_education_id = $data['job_education_id'];
-			unset($data['job_key_skill']);
 			unset($data['job_education_id']);
 			unset($data['job_country_id']);
 			unset($data['job_state_id']);
@@ -514,13 +545,6 @@ class Admin extends CI_Controller {
 				$mappingData['primary_id'] = 'job_id';
 				$mappingData['primary_value'] = $jobId;
 				$mappingData['education_id'] = $job_education_id;
-				$this->Common_model->mappingTable($mappingData);
-				
-				$mappingData = array();
-				$mappingData['table_name'] = 'job_skills_mapping';
-				$mappingData['primary_id'] = 'job_id';
-				$mappingData['primary_value'] = $jobId;
-				$mappingData['skills_id'] = $job_key_skills;
 				$this->Common_model->mappingTable($mappingData);
 				
 				$responseData['status']=AJAX_SUCCESS;
@@ -620,6 +644,7 @@ class Admin extends CI_Controller {
 			}
 		}
 		$data['jobs']=json_encode($record);
+		$data['admin']=true;
 		$this->_loadAdminView('list-jobs',$data);
 	}
 	

@@ -52,6 +52,12 @@ public function index()
 		$data['footer']=$this->load->view('includes/admin-footer', $data, true);
 		}
 		$data['job_id']=0;
+		
+		$master_data=array();
+		$master_data['table_name']='education';
+		$master_data['where']=' status=1 ';
+		$data['education']=$this->Common_model->get_master($master_data);
+		
 		$this->load->view('resume_search_new',$data);
 	}
 public function resume_search()
@@ -96,10 +102,17 @@ public function resume_search()
 			//echo $this->db->last_query();
 			if(!empty($record))
 			{
+				$master_data=array();
+				$master_data['table_name']='education';
+				$master_data['where']=' status=1 ';
+				$education=$this->Common_model->get_master($master_data);
+				$educations = array_column($education, "name","id");
+				
 				foreach($record as $key=>$row)
 				{
+					$record[$key]['education'] = 'Basic : '.$educations[$record[$key]['employee_edu_basic']].'<br>Master : '. $educations[$record[$key]['employee_edu_master']];
 					$record[$key]['expry'] = 'Exprience : '.$record[$key]['employee_exp_year'].'.'. $record[$key]['employee_exp_month'].' Yrs <BR> Notice Period '.$record[$key]['employee_notice'].' Days <br>Salary : '.$record[$key]['employee_current_salary'].' (L/A)';
-					$record[$key]['detail'] = $record[$key]['employee_email'].'<BR>'. $record[$key]['employee_mobile_no'].'<BR>Current :'.$record[$key]['employee_city'].'<BR>Preferred : '.$record[$key]['preferred_location'];
+					$record[$key]['detail'] = $record[$key]['employee_email'].'<BR>'. $record[$key]['employee_mobile_no'].'<BR>Current :'.$record[$key]['employee_city_name'].'<BR>Preferred : '.($record[$key]['preferred_location']|'Any');
 					$record[$key]['created_date'] = common_date_format($record[$key]['created_date']);
 				}
 

@@ -74,8 +74,8 @@ class Employee_model extends CI_Model
         if($query->num_rows()>0)
         {
             $result=$query->row_array();
-            $data['user_hash'] = $result['employee_password'];
-            $data['user_pass'] = $this->encrypt->decode($data['employee_password']);
+            $data['user_hash'] = $this->encrypt->decode($result['employee_password']);
+            $data['user_pass'] = $data['employee_password'];
             //if(compare_lsa_pass($data))
             if($data['user_hash'] == $data['user_pass'])
             {
@@ -261,8 +261,11 @@ class Employee_model extends CI_Model
                 /*$this->db->where('DATE(created_date) >=',$data['from_date']);
                 $this->db->where('DATE(created_date) <=',$data['to_date']);*/
                 }
-
-                $this->db->select('employee.*');
+                else 
+                	$this->db->join('job_applied','job_applied.admin_approve=1  and job_applied.user_id = employee.id');
+                $this->db->join('job','job_applied.job_id= job.id','left join');
+                $this->db->join('location','location.id= employee.employee_city','left join');
+                $this->db->select('employee.*,job.job_title as employee_job_title,location.name as employee_city_name');
                 $this->db->order_by('id','DESC');
                 $query=$this->db->get('employee');
                 return $query->result_array();
@@ -310,7 +313,7 @@ class Employee_model extends CI_Model
         $this->db->join('education as master','master.id=employee_edu_master','left');
         $this->db->join('education as basic','basic.id=employee_edu_basic','left');
         $this->db->join('industry','industry.id=employee_industry','left');
-        $this->db->join('functional','industry.id=employee_functional','left');
+        $this->db->join('functional','functional.id=employee_functional','left');
         // $this->db->join('functional','industry.id=employee_functional','left');
         $query=$this->db->get('employee');
         return $query->result_array();

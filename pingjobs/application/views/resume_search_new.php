@@ -2,393 +2,423 @@
 <link href="<?php echo base_url();?>css/admin.css" rel="stylesheet">
     <!-- Begin page content -->
 
-   <div class="row">
-      <div class="col-md-4">
-        <div class="page-header">
-        <h3 class="light">Employee Management</h3>
-        </div>
-      </div>
-
-        <div class="col-md-8 pad-top-10">
-        <div class="navbar-collapse collapse">
-          <!-- <div class="col-md-4"><small><strong>48</strong> Clients Found</small></div> -->
-          <ul class="nav navbar-nav navbar-left">
-
-          <div class="alert alert-danger" style="display:none">
-                      <strong>Error!</strong> The email/username and password you entered don't match .
-                    </div>
-                    <div class="alert alert-success" style="display:none">
-                      <strong>Error!</strong> The email/username and password you entered don't match .
-                    </div>
-
-
-          <div class="clearfix"></div>
-        </div> 
-      </div>       
-      
-
-      
-    </div>
+<div class="row">
+	<div class="col-md-4">
+		<div class="page-header">
+			<h3 class="light">Employee Management</h3>
+		</div>
+	</div>
+	<div class="col-md-8 pad-top-10">
+		<div class="navbar-collapse collapse">
+			<!-- <div class="col-md-4"><small><strong>48</strong> Clients Found</small></div> -->
+			<div class="nav navbar-nav navbar-left">
+				<div class="alert alert-danger" style="display: none">
+					<strong>Error!</strong> The email/username and password you entered
+					don't match .
+				</div>
+				<div class="alert alert-success" style="display: none">
+					<strong>Error!</strong> The email/username and password you entered
+					don't match .
+				</div>
+				<div class="clearfix"></div>
+			</div>
+		</div>
+	</div>
+</div>
 
 
- 
+
 
 <div id="toolbar">
-        <button id="remove" class="btn btn-primary" onclick ="export_data()" >
-            <i class="glyphicon glyphicon-cloud-download "></i> Export
-        </button>
-        <button id="remove" class="btn btn-primary"  data-toggle="modal" data-target="#sendmail"  >
-        <i class="glyphicon glyphicon-envelope"></i> Send Resume            
-        </button>
-    </div>
-    <div id="toolbar">
-        
-    </div>
+	<button id="remove" class="btn btn-primary" onclick="export_data()">
+		<i class="glyphicon glyphicon-cloud-download "></i> Export
+	</button>
+	<button id="remove" class="btn btn-primary" data-toggle="modal"
+		data-target="#sendmail">
+		<i class="glyphicon glyphicon-envelope"></i> Send Resume
+	</button>
+</div>
+<div id="toolbar"></div>
 
 
-    
-<table id="eventsTable"  class ="table-striped"  style="display:none" data-show-export="true"
-       data-sort-name ="id"
-       data-sort-order ="desc" 
-       data-pagination="true"
-       data-search="true"      
-       data-show-toggle="true"
-       data-show-columns="true"
-       data-show-export="true"
-       data-page-size ="20"
-       data-smart-display ="true"
-       data-show-columns ="true"
-       data-click-to-select ="true"
-       data-sortable ="true"
-       data-toolbar="#toolbar"
-        data-show-refresh="true"        
-           >
-    <thead>
-    <tr>       
-        <th  data-field="state"  data-checkbox="true" ></th>
-        <th data-defaultsort="desc" data-sortable="true" data-field="id">id</th>
-        <th data-field="employee_name">Name</th>        
-        <th data-field="employee_skills">Skill</th>        
-        <th data-field="expry">Exprience</th>        
-    </tr>
-   
-    </thead>
+
+<table id="eventsTable" class="table-striped" style="display: none"
+	data-show-export="true" data-sort-name="id" data-sort-order="desc"
+	data-pagination="true" data-search="true" data-show-toggle="true"
+	data-show-columns="true" data-show-export="true" data-page-size="20"
+	data-smart-display="true" data-show-columns="true"
+	data-click-to-select="true" data-sortable="true"
+	data-toolbar="#toolbar" data-show-refresh="true">
+	<thead>
+		<tr>
+			<th data-field="state" data-checkbox="true"></th>
+			<th data-defaultsort="desc" data-sortable="true" data-field="id">id</th>
+			<th data-field="employee_name">Name</th>
+			<th data-field="employee_skills">Skill</th>
+			<th data-field="expry">Exprience</th>
+		</tr>
+
+	</thead>
 </table>
 
-
-
-      
-    </div>
-
-
-    <div class="modal" id="employeeViewDialog" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="myModalLabel1">Employee Details</h4>
-      </div>
-     <form class="form-horizontal" method="post" action="<?php echo base_url(); ?>admin/resume_search">
+<div class="modal" id="employeeViewDialog" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"
+					aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+				<h4 class="modal-title" id="myModalLabel1">Employee Details</h4>
+			</div>
+			<!-- <form class="form-horizontal" method="post" action="<?php echo base_url(); ?>admin/resume_search">-->
+     <?php echo form_open('admin/resume_search',array("class"=>"form-horizontal"));?>
         <div class="modal-body">
 
-          <div class="form-group">
-            <label class="col-md-4 control-label pad-top-0" for="name">Name : </label>
-            <div class="col-md-6">
-              <span class=" control-label" for="name" id="view_employee_name"></span>  
-            </div>
-          </div>
+				<div class="form-group">
+					<label class="col-md-4 control-label pad-top-0" for="name">Name : </label>
+					<div class="col-md-6">
+						<span class=" control-label" for="name" id="view_employee_name"></span>
+					</div>
+				</div>
 
-          <div class="form-group">
-            <label class="col-md-4 control-label pad-top-0" for="name">Mobile No : </label>  
-            <div class="col-md-6">
-              <span class=" control-label" for="name" id="view_employee_mobile_no"></span>  
-            </div>
-          </div>
+				<div class="form-group">
+					<label class="col-md-4 control-label pad-top-0" for="name">Mobile
+						No : </label>
+					<div class="col-md-6">
+						<span class=" control-label" for="name" id="view_employee_mobile_no"></span>
+					</div>
+				</div>
 
-          <div class="form-group">
-            <label class="col-md-4 pad-top-0 control-label" for="name">Email : </label>  
-            <div class="col-md-6">
-              <span class="control-label" for="name" id="view_employee_email"></span>  
-            </div>
-          </div>
+				<div class="form-group">
+					<label class="col-md-4 pad-top-0 control-label" for="name">Email :
+					</label>
+					<div class="col-md-6">
+						<span class="control-label" for="name" id="view_employee_email"></span>
+					</div>
+				</div>
 
-          <div class="form-group">
-            <label class="col-md-4 pad-top-0 control-label" for="name">Resume : </label>  
-            <div class="col-md-6">
-              <span class=" control-label" for="name"> <a target="_blank" download href="" id="view_employee_resume_url"><i class="glyphicon glyphicon-download-alt"></i> <span id="view_employee_resume_name"></span></a></span>  
-            </div>
-          </div>
+				<div class="form-group">
+					<label class="col-md-4 pad-top-0 control-label" for="name">Resume :
+					</label>
+					<div class="col-md-6">
+						<span class=" control-label" for="name"> <a target="_blank" download href="" id="view_employee_resume_url"><i class="glyphicon glyphicon-download-alt"></i> <span id="view_employee_resume_name"></span></a></span>
+					</div>
+				</div>
 
-          <div class="form-group">
-            <label class="col-md-4 pad-top-0 control-label" for="name">Skills : </label>  
-            <div class="col-md-6">
-              <span class=" control-label" for="name" id="view_employee_skills"></span>  
-            </div>
-          </div>
-          <div class="form-group">
-            <label class="col-md-4 pad-top-0 control-label" for="name">Job Apply For: </label>  
-            <div class="col-md-6">
-              <span class=" control-label" for="name" id="view_employee_job_title"></span>  
-            </div>
-          </div>
+				<div class="form-group">
+					<label class="col-md-4 pad-top-0 control-label" for="name">Skills :
+					</label>
+					<div class="col-md-6">
+						<span class=" control-label" for="name" id="view_employee_skills"></span>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-md-4 pad-top-0 control-label" for="name">Job
+						Apply For: </label>
+					<div class="col-md-6">
+						<span class=" control-label" for="name" id="view_employee_job_title"></span>
+					</div>
+				</div>
 
-          <div class="form-group">
-            <label class="col-md-4 pad-top-0 control-label" for="name">Experience : </label>  
-            <div class="col-md-6">
-              <span class=" control-label" for="name"><span id="view_employee_exp_year"></span>.<span id="view_employee_exp_month"></span> <small>years</small></span>  
-            </div>
-          </div>
+				<div class="form-group">
+					<label class="col-md-4 pad-top-0 control-label" for="name">Experience
+						: </label>
+					<div class="col-md-6">
+						<span class=" control-label" for="name"><span id="view_employee_exp_year"></span>.
+						<span id="view_employee_exp_month"></span> <small>years</small></span>
+					</div>
+				</div>
 
-          <div class="form-group">
-            <label class="col-md-4 pad-top-0 control-label" for="name">Current Company : </label>  
-            <div class="col-md-6">
-              <span class=" control-label" for="name" id="view_employee_current_company"></span>  
-            </div>
-          </div>
+				<div class="form-group">
+					<label class="col-md-4 pad-top-0 control-label" for="name">Current
+						Company : </label>
+					<div class="col-md-6">
+						<span class=" control-label" for="name" id="view_employee_current_company"></span>
+					</div>
+				</div>
 
-          <div class="form-group">
-            <label class="col-md-4 pad-top-0 control-label" for="name">Current Salary</label>  
-            <div class="col-md-6">
-              <span class=" control-label" for="name" id="view_employee_current_salary"> </span>  <small>(laks/annum)</small>
-            </div>
-          </div>
+				<div class="form-group">
+					<label class="col-md-4 pad-top-0 control-label" for="name">Current
+						Salary</label>
+					<div class="col-md-6">
+						<span class=" control-label" for="name"
+							id="view_employee_current_salary"> </span> <small>(laks/annum)</small>
+					</div>
+				</div>
 
-          <div class="form-group">
-            <label class="col-md-4 pad-top-0 control-label" for="name">Expected Salary : </label>  
-            <div class="col-md-6">
-              <span class=" control-label" for="name" id="view_employee_expected_salary"></span>  <small>(laks/annum)</small>
-            </div>
-          </div>
+				<div class="form-group">
+					<label class="col-md-4 pad-top-0 control-label" for="name">Expected
+						Salary : </label>
+					<div class="col-md-6">
+						<span class=" control-label" for="name"
+							id="view_employee_expected_salary"></span> <small>(laks/annum)</small>
+					</div>
+				</div>
 
-          <div class="form-group">
-            <label class="col-md-4 pad-top-0 control-label" for="name">Notice Period : </label>  
-            <div class="col-md-6">
-              <span class=" control-label" for="name" id="view_employee_notice"></span>  <small>days</small>
-            </div>
-          </div>
+				<div class="form-group">
+					<label class="col-md-4 pad-top-0 control-label" for="name">Notice
+						Period : </label>
+					<div class="col-md-6">
+						<span class=" control-label" for="name" id="view_employee_notice"></span>
+						<small>days</small>
+					</div>
+				</div>
 
-          <div class="form-group">
-            <label class="col-md-4 pad-top-0 control-label" for="name">Education Master : </label>  
-            <div class="col-md-6">
-              <span class=" control-label" for="name" id="view_employee_edu_master"></span>  
-            </div>
-          </div>
+				<div class="form-group">
+					<label class="col-md-4 pad-top-0 control-label" for="name">Education
+						Master : </label>
+					<div class="col-md-6">
+						<span class=" control-label" for="name"
+							id="view_employee_edu_master"></span>
+					</div>
+				</div>
 
-          <div class="form-group">
-            <label class="col-md-4 pad-top-0 control-label" for="name">Education Basic : </label>  
-            <div class="col-md-6">
-              <span class=" control-label" for="name" id="view_employee_edu_basic"></span>  
-            </div>
-          </div>
+				<div class="form-group">
+					<label class="col-md-4 pad-top-0 control-label" for="name">Education
+						Basic : </label>
+					<div class="col-md-6">
+						<span class=" control-label" for="name"
+							id="view_employee_edu_basic"></span>
+					</div>
+				</div>
 
-          <div class="form-group">
-            <label class="col-md-4 pad-top-0 control-label" for="name">Current City : </label> 
-            <div class="col-md-6">
-              <span class=" control-label" for="name" id="view_employee_city"></span>  
-            </div>
-          </div>
-          <div class="form-group">
-            <label class="col-md-4 pad-top-0 control-label" for="name">Preferred City : </label> 
-            <div class="col-md-6">
-              <span class=" control-label" for="name" id="view_preferred_location"></span>  
-            </div>
-          </div>
+				<div class="form-group">
+					<label class="col-md-4 pad-top-0 control-label" for="name">Current
+						City : </label>
+					<div class="col-md-6">
+						<span class=" control-label" for="name" id="view_employee_city"></span>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-md-4 pad-top-0 control-label" for="name">Preferred
+						City : </label>
+					<div class="col-md-6">
+						<span class=" control-label" for="name"
+							id="view_preferred_location"></span>
+					</div>
+				</div>
 
-          <div class="form-group">
-            <label class="col-md-4 pad-top-0 control-label" for="name">Linkedin URL : </label> 
-            <div class="col-md-6">
-              <span class=" control-label" for="name" id="view_employee_Linkedin_url"></span>  
-            </div>
-          </div>
+				<div class="form-group">
+					<label class="col-md-4 pad-top-0 control-label" for="name">Linkedin
+						URL : </label>
+					<div class="col-md-6">
+						<span class=" control-label" for="name"
+							id="view_employee_Linkedin_url"></span>
+					</div>
+				</div>
 
-           <div class="form-group">
-            <label class="col-md-4 pad-top-0 control-label" for="name">Posted On : </label> 
-            <div class="col-md-6">
-              <span class=" control-label" for="name" id="view_created_date"></span>  
-            </div>
-          </div>
+				<div class="form-group">
+					<label class="col-md-4 pad-top-0 control-label" for="name">Posted
+						On : </label>
+					<div class="col-md-6">
+						<span class=" control-label" for="name" id="view_created_date"></span>
+					</div>
+				</div>
 
 
 
-          <div class="form-group">
-            <label class="col-md-4 pad-top-0 control-label" for="name">Address : </label> 
-            <div class="col-md-6">
-              <span class=" control-label" for="name" id="view_employee_address"></span>  
-            </div>
-          </div>
-        </div>
-       <div class="modal-footer">
-        <button type="button" onclick="clearAll(this)"  class="btn btn-default" data-dismiss="modal">Cancel</button>
-        </div>
-    </form>
-    </div>
-  </div>
+				<div class="form-group">
+					<label class="col-md-4 pad-top-0 control-label" for="name">Address
+						: </label>
+					<div class="col-md-6">
+						<span class=" control-label" for="name" id="view_employee_address"></span>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" onclick="clearAll(this)"
+					class="btn btn-default" data-dismiss="modal">Cancel</button>
+			</div>
+			</form>
+		</div>
+	</div>
 </div>
 
+<div class="modal " id="addDialog" tabindex="-1" role="dialog"
+	aria-labelledby="myModalLabel">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"
+					aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+				<h4 class="modal-title" id="myModalLabel">Search</h4>
+			</div>
+			<form class="form-horizontal" onsubmit=" return false;"
+				id="search-form">
+
+				<input type="hidden" name="job" id="job"
+					value="<?php echo ($job_id >0 ) ? $job_id :0 ?>" />
+				<div class="modal-body">
+
+					<div class="form-group">
+						<label class="col-md-4 control-label" for="name">Skills</label>
+						<div class="col-md-6">
+							<input id="skills" name="skills" type="text"
+								placeholder="Enter Skill" class="form-control input-md">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-md-4 control-label" for="name">Candidate Name</label>
+						<div class="col-md-6">
+							<input id="employee_name" name="employee_name" type="text"
+								placeholder="Enter Candidate Name" class="form-control input-md">
+						</div>
+					</div>
+
+					<div class="form-group">
+						<label class="col-md-4 control-label" for="name">Company Name</label>
+						<div class="col-md-6">
+							<input id="employee_current_company"
+								name="employee_current_company" type="text"
+								placeholder="Enter Company Name" class="form-control input-md">
+						</div>
+					</div>
 
 
+					<div class="form-group">
+						<label class="col-md-4 control-label" for="name">Experience</label>
+						<div class="col-md-2">
+							<input id="exp_from" name="exp_from" type="text"
+								placeholder="Min" class="form-control input-md">
+						</div>
+						<div class="col-md-2">
+							<label class="col-md-1 control-label" for="name">To </label>
+						</div>
+						<div class="col-md-2">
+							<input id="exp_to" name="exp_to" type="text" placeholder="Max"
+								class="form-control input-md">
+						</div>
+					</div>
 
 
-    <div class="modal " id="addDialog" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="myModalLabel">Search</h4>
-      </div>
-     <form class="form-horizontal"  onsubmit=" return false;" id ="search-form">
-     
-     <input type="hidden"  name="job" id ="job" value ="<?php echo ($job_id >0 ) ? $job_id :0 ?>" /> 
-        <div class="modal-body">
+					<div class="form-group">
+						<label class="col-md-4 control-label" for="name">Salary</label>
+						<div class="col-md-2">
+							<input id="salary_from" name="salary_from" type="text"
+								placeholder="Min" class="form-control input-md">
+						</div>
+						<div class="col-md-2">
+							<label class="col-md-1 control-label" for="name">To </label>
+						</div>
+						<div class="col-md-2">
+							<input id="salary_to" name="salary_to" type="text"
+								placeholder="Max" class="form-control input-md">
+						</div>
+					</div>
 
-            <div class="form-group">
-              <label class="col-md-4 control-label" for="name">Skills</label>  
-              <div class="col-md-6">
-                <input id="skills" name="skills" type="text" placeholder="Enter Skill" class="form-control input-md">              
-              </div>
-            </div>
-            <div class="form-group">
-              <label class="col-md-4 control-label" for="name">Candidate Name</label>  
-              <div class="col-md-6">
-                <input id="employee_name" name="employee_name" type="text" placeholder="Enter Candidate Name" class="form-control input-md">              
-              </div>
-            </div>
+					<div class="form-group">
+						<label class="col-md-4 control-label" for="name">Current Location</label>
+						<div class="col-md-6">
+							<input id="location" name="location" type="text"
+								placeholder="Enter Location" class="form-control input-md">
+						</div>
+					</div>
 
-            <div class="form-group">
-              <label class="col-md-4 control-label" for="name">Company Name</label>  
-              <div class="col-md-6">
-                <input id="employee_current_company" name="employee_current_company" type="text" placeholder="Enter Company Name" class="form-control input-md">              
-              </div>
-            </div>
-
-
-            <div class="form-group">
-              <label class="col-md-4 control-label" for="name">Experience</label>  
-              <div class="col-md-2">
-                <input id="exp_from" name="exp_from" type="text" placeholder="Min" class="form-control input-md">              
-              </div>
-              <div class="col-md-2">
-              <label class="col-md-1 control-label" for="name">To </label>  
-              </div>
-              <div class="col-md-2">
-                <input id="exp_to" name="exp_to" type="text" placeholder="Max" class="form-control input-md">              
-              </div>
-            </div>
-
-
-            <div class="form-group">
-              <label class="col-md-4 control-label" for="name">Salary</label>  
-              <div class="col-md-2">
-                <input id="salary_from" name="salary_from" type="text" placeholder="Min" class="form-control input-md">              
-              </div>
-              <div class="col-md-2">
-              <label class="col-md-1 control-label" for="name">To </label>  
-              </div>
-              <div class="col-md-2">
-                <input id="salary_to" name="salary_to" type="text" placeholder="Max" class="form-control input-md">              
-              </div>
-            </div>
-
-            <div class="form-group">
-              <label class="col-md-4 control-label" for="name">Current Location</label>  
-              <div class="col-md-6">
-                <input id="location" name="location" type="text" placeholder="Enter Location" class="form-control input-md">              
-              </div>
-            </div>
-
-            <div class="form-group">
-              <label class="col-md-4 control-label" for="name">Current Education</label>  
-              <div class="col-md-6">
-               <select id="education" name="education" class="form-control">
-                <option value="0">Select Education</option>
-                      <?php 
-                      foreach($education as $row)
-                      {?> 
-                    <option value="<?php echo $row['id'];?>" <?php echo ($row['id'] == @$job[0]['job_location_id'])? 'selected="selected"':''; ?>><?php echo ucfirst($row['name']);?></option>
+					<div class="form-group">
+						<label class="col-md-4 control-label" for="name">Current Education</label>
+						<div class="col-md-6">
+							<select id="education" name="education" class="form-control">
+								<option value="0">Select Education</option>
+                      <?php
+					foreach ( $education as $row ) {
+						?> 
+                    <option value="<?php echo $row['id'];?>"
+									<?php echo ($row['id'] == @$job[0]['job_location_id'])? 'selected="selected"':''; ?>><?php echo ucfirst($row['name']);?></option>
                   <?php } ?>
 
-                    </select>         
-              </div>
-            </div>
-            <div class="form-group">
-              <label class="col-md-4 control-label" for="name">Notice Period <small>(in days)</small></label>  
-              <div class="col-md-6">
-                <input id="notice" name="notice" type="text" placeholder="Enter Notice" class="form-control input-md">              
-              </div>
-            </div>
+                    </select>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-md-4 control-label" for="name">Notice Period <small>(in
+								days)</small></label>
+						<div class="col-md-6">
+							<input id="notice" name="notice" type="text"
+								placeholder="Enter Notice" class="form-control input-md">
+						</div>
+					</div>
 
-             <div class="form-group">
-              <label class="col-md-4 control-label" for="name">Date Range</label>  
-              <div class="col-md-4">
+					<div class="form-group">
+						<label class="col-md-4 control-label" for="name">Date Range</label>
+						<div class="col-md-4">
 
-              <div class='input-group date' id='datetimepicker6' >
-                <input type='text' class="form-control" name ='from_date' />
-                <span class="input-group-addon">
-                    <span class="glyphicon glyphicon-calendar"></span>
-                </span>
-              </div>
+							<div class='input-group date' id='datetimepicker6'>
+								<input type='text' class="form-control" name='from_date' /> <span
+									class="input-group-addon"> <span
+									class="glyphicon glyphicon-calendar"></span>
+								</span>
+							</div>
 
-              </div>
-              
-              <div class="col-md-4">
-                <div class='input-group date' id='datetimepicker7' >
-                <input type='text' class="form-control" name ='to_date' />
-                <span class="input-group-addon">
-                    <span class="glyphicon glyphicon-calendar"></span>
-                </span>
-            </div>               
-            </div>
+						</div>
 
-            
+						<div class="col-md-4">
+							<div class='input-group date' id='datetimepicker7'>
+								<input type='text' class="form-control" name='to_date' /> <span
+									class="input-group-addon"> <span
+									class="glyphicon glyphicon-calendar"></span>
+								</span>
+							</div>
+						</div>
+					</div>
+				</div>
 
-          
-        </div>
+				<div class="modal-footer">
+					<button type="button" onclick="clearAll(this)"
+						class="btn btn-default" data-dismiss="modal">Clear</button>
+					<button type="button" onclick="search_resume()" name="search"
+						class="btn btn-crm-blue">Search</button>
+				</div>
+			</form>
+		</div>
 
-       <div class="modal-footer">
-        <button type="button" onclick="clearAll(this)"  class="btn btn-default" data-dismiss="modal">Clear</button>
-        <button type="button" onclick ="search_resume()" name="search" class="btn btn-crm-blue">Search</button>
-        </div>
-    </form>
-    </div>
-
-  </div>
+	</div>
 </div>
 
 
 
- <div class="modal " id="sendmail" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="myModalLabel">Send Email</h4>
-      </div>
-	  <?php echo form_open($action,array('class'=>"form-horizontal","id"=>"email-form","onsubmit"=>"return false;"));?>
+<div class="modal " id="sendmail" tabindex="-1" role="dialog"
+	aria-labelledby="myModalLabel">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"
+					aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+				<h4 class="modal-title" id="myModalLabel">Send Email</h4>
+			</div>
+	  <?php echo form_open('',array('class'=>"form-horizontal","id"=>"email-form","onsubmit"=>"return false;"));?>
         <div class="modal-body">
 
-            <div class="form-group">
-              <label class="col-md-3 control-label" for="name">Email Id</label>  
-              <div class="col-md-9">
-                <input id="sendemail" name="sendemail" required ="" type="email"  type="text" placeholder="Enter Skill" class="form-control input-md">              
-              </div>
-            </div>   
+				<div class="form-group">
+					<label class="col-md-3 control-label" for="name">Email Id</label>
+					<div class="col-md-9">
+						<input id="sendemail" name="sendemail" required="required" type="email"
+							type="text" placeholder="Enter Email ID"
+							class="form-control input-md">
+					</div>
+				</div>
 
-            <div class="form-group">
-              <label class="col-md-3 control-label" for="name">Email Content</label>  
-              <div class="col-md-9">
-              <textarea class="form-control" rows="5" id="comment"></textarea>            
-              </div>
-            </div>
-            </div>        
+				<div class="form-group">
+					<label class="col-md-3 control-label" for="name">Email Content</label>
+					<div class="col-md-9">
+						<textarea class="form-control" rows="5" id="comment"></textarea>
+					</div>
+				</div>
+			</div>
 
-       <div class="modal-footer">
-        <button type="button" onclick="clearAll(this)"  class="btn btn-default" data-dismiss="modal">Clear</button>
-        <button type="button" onclick ="send_email()" name="search" class="btn btn-crm-blue">Send</button>
-        </div>
-    </form>
-    </div>
-
-  </div>
+			<div class="modal-footer">
+				<button type="button" onclick="clearAll(this)"
+					class="btn btn-default" data-dismiss="modal">Clear</button>
+				<button type="button" onclick="send_email()" name="search"
+					class="btn btn-crm-blue">Send</button>
+			</div>
+			</form>
+		</div>
+	</div>
 </div>
 <?php echo $footer; ?>
 
@@ -462,9 +492,7 @@ function search_resume() {
                 value: 'id',
                 title: '',
                 class: "col-md-1",
-              },
-
-            {
+            },{
                 field: 'id',
                 align: 'center',
                 valign: 'middle',
@@ -480,10 +508,15 @@ function search_resume() {
                 title: 'Skill',
                 field: 'employee_skills',
                 sortable: true,
-                class: "col-md-4"
+                class: "col-md-1"
             }, {
                 title: 'Exprience',
                 field: 'expry',
+                sortable: true,
+                class: "col-md-2"
+            }, {
+                title: 'Education',
+                field: 'education',
                 sortable: true,
                 class: "col-md-2"
             }, {
@@ -587,7 +620,7 @@ function rowAttributes(value, row, index) {
 
     $.ajax({
         url: gBaseUrl+'/search/export?id='+checkedRows+'&email='+mail+'&type=email&msg='+comment,
-        //data: datObj,
+        data: {'csrf_token_name':$("[name=csrf_token_name]").val()},
         dataType: 'json',
         method: 'POST',
         beforeSend:function(){

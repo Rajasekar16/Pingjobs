@@ -1,5 +1,0 @@
-RewriteEngine On
-RewriteBase /dashboard-design/less/
-
-RewriteRule index.php.* - [L]
-RewriteRule ^(.*) index.php?id=$1 

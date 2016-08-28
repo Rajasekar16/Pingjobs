@@ -126,14 +126,23 @@ else
 			  
 			  <!-- Text input-->
 			  <div class="form-group required">
-				<label class="col-md-5 control-label" for="keyskills">Key Skills</label>  
+				<label class="col-md-5 control-label" for="keyskills">Primary Skills</label>  
 				<div class="col-md-7">
-					<select id="job_key_skill" name="job_key_skill[]" class="form-control chosen" data-placeholder="Key Skills" required multiple>
-						<option value="" disabled>Use Ctrl key to select multiple</option>
+					<select id="skills" name="skills" class="form-control chosens" data-placeholder="Key Skills" required>
+						<!-- <option value="" disabled>Use Ctrl key to select multiple</option> -->
+						<option value="">--Select--</option>
 					  <?php  foreach($skills as $row) {?> 
-							<option value="<?php echo $row['id'];?>" <?php echo @(in_array($row['id'],$job_data['skills'])) ? 'selected="selected"':''; ?>><?php echo ucfirst($row['name']);?></option>
+							<option value="<?php echo $row['id'];?>" <?php echo @($row['id']==$job_data['skills']) ? 'selected="selected"':''; ?>><?php echo ucfirst($row['name']);?></option>
 					  <?php } ?>
 					  </select>
+				</div>
+			  </div>
+			  
+			  <!-- Text input-->
+			  <div class="form-group required">
+				<label class="col-md-5 control-label" for="job_key_skills">Key Skills</label>  
+				<div class="col-md-7">
+					<input type ="text" class="form-control" data-role="tagsinput" required name="job_key_skills"  id="job_key_skills" placeholder="Enter Key Skills" value ="<?php echo @$job_data['job_key_skills'];?>" />
 				</div>
 			  </div>
 			  
@@ -399,9 +408,14 @@ function postjob()
       alert('Please check terms and conditions');
       return false ;
     }
-	if(!$('#job_key_skill').val())
+	if(!$('#skills').val())
     {
-      alert('Please add aleast one key skills');
+      alert('Please select primary skills');
+      return false ;
+    }
+	if(!$('#job_key_skills').val())
+    {
+      alert('Please enter aleast one key skills');
       return false ;
     }
     if($('#job_salary_from').val() || $('#job_salary_to').val())
@@ -440,7 +454,7 @@ function postjob()
     $('#pre_functional_name').html($('#job_functional_id option:selected').text());
     $('#pre_location_name').html($('#job_location_id option:selected').text());
     $('#pre_education').html($('#job_education_id option:selected').text()+'-'+$('#job_education_spe').val());
-    $('#pre_job_key_skill').html($('#job_key_skill').val());
+    $('#pre_job_key_skill').html($('#job_key_skills').val());
     $('#pre_company_name').html($('#company_name').val());
     $('#pre_about_company').html($('#about_company').val());
    $('#addDialog').modal({'backdrop':'static'}).modal('show');

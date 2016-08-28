@@ -5,8 +5,8 @@ echo form_open('job/job_ajax',array('class'=>"form-horizontal","id"=>"searchJobs
     <!-- Tag select reference http://timschlechter.github.io/bootstrap-tagsinput/examples/ -->
     <div class="container container-home signup-forms">
       <div class="row">
-        <div class="col-md-2 pad-lt-0">
-          <div class="sidebar">
+        <div class="col-md-2 pad-lt-0" >
+          <div class="sidebar home-aside" data-spy="affix" data-offset-top="185">
             <h4 class="page-header">Refine Results</h4>
             <h5 class="page-header">Freshness</h5>
             <select id="last_days" class="selectbox width100" onchange="applyFilter()">
@@ -47,7 +47,7 @@ echo form_open('job/job_ajax',array('class'=>"form-horizontal","id"=>"searchJobs
                   foreach($industry as $row)
                   {?>
                   	<li class="checkbox">
-                  		<input class="check_industry" value="<?php echo $row['id']; ?>" type="checkbox" onchange="applyFilter()" id="<?php echo $row['id']; ?>" />
+                  		<input class="check_industry" value="<?php echo $row['id']; ?>" <?php echo ($searchIndustry == $row['id']) ? 'checked': ''; ?>  type="checkbox" onchange="applyFilter()" id="<?php echo $row['id']; ?>" />
 						<label ><?php echo $row['name']; ?></label>
 					</li>
                 <?php }

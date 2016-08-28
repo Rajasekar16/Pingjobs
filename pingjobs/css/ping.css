@@ -99,7 +99,7 @@ a{
     border: 1px solid #aaaaaa;
     cursor: pointer;
     background-size: 7px 4px;
-    background-image: url("/images/arrowdown.png");
+    background-image: url("../images/arrowdown.png");
     background-position: right 6px center;
     background-repeat: no-repeat;
     padding-right: 15px !important;
@@ -114,6 +114,10 @@ a{
 body > .container {
   padding: 0px 15px 30px;
 }
+.container.minHeight {
+	min-height:600px
+}
+
 .container-home {
   padding: 10px 15px 0 !important;
 }
@@ -417,6 +421,9 @@ code {
 .sidebar .list-group{
 	list-style: none;
 	padding-left: 10px;
+	max-height:85px;
+	overflow:auto;
+	margin-bottom:10px;
 }
 .job-detail-but{
 	background: #e2e2e2;
@@ -679,6 +686,7 @@ input[type="radio"] .styled:checked + label::after {
 	background-color:#005e9d !important;
 	border: 0;
 	border-radius: 0;
+	height:50px;
 }
 .ping-navbar a{
 	color:#FFF !important;
@@ -697,6 +705,10 @@ nav.affix {
     z-index: 1000;
     right: 0;
 }
+.sidebar.home-aside.affix {
+	width:14%;
+	top:70px;
+}
 .home-aside.affix {
     position: fixed;
     top: 80px;
@@ -708,7 +720,7 @@ nav.affix {
 	/*margin-left:20%;*/
 }
 .nav-margins li{
-	padding:5px 10px;
+	padding:0px 10px;
 }
 .nav-margins li a{
 	font-size:20px;
@@ -730,6 +742,10 @@ nav.affix {
     position: relative;
     width: 80%;
 	margin:0 10%;
+}
+.carousel-inner img{
+	width:120px !important;
+	height:120px !important;
 }
 .carousel-inner > .item {
     display: none;
@@ -875,4 +891,7 @@ nav.affix {
 }
 .raw-text {
     text-decoration: none !important;
+}
+.static-height{
+	min-height:55px;
 }

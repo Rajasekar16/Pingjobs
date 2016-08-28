@@ -24,6 +24,7 @@ class Employee  extends CI_Controller {
       	$this->load->model('Employee_model');
       	$this->load->model('Common_model');
       	$this->load->helper('common');
+		$this->load->library('encrypt');
     }
 
 	public function index()
@@ -46,66 +47,92 @@ class Employee  extends CI_Controller {
 		$master_data['table_name']='salary';
 		$master_data['where']=' status=1';
 		$data['salary']=$this->Common_model->get_master($master_data);
-		 $master_data=array();
-		  $master_data['table_name']='industry';
-		  $master_data['where']=' status=1 ';
-		  $data['industry']=$this->Common_model->get_master($master_data);
-
-		  $master_data=array();
-		  $master_data['table_name']='functional';
-		  $master_data['where']=' status=1 ';
-		  $data['functional']=$this->Common_model->get_master($master_data);
-
-
-
+		$master_data=array();
+		$master_data['table_name']='industry';
+		$master_data['where']=' status=1 ';
+		$data['industry']=$this->Common_model->get_master($master_data);
+		
+		$master_data=array();
+		$master_data['table_name']='functional';
+		$master_data['where']=' status=1 ';
+		$data['functional']=$this->Common_model->get_master($master_data);
+		
+		
+		$master_data=array();
+		$master_data['table_name']='state';
+		$master_data['where']=' status=1 ';
+		$data['state']=$this->Common_model->get_master($master_data);
+		
+		$master_data=array();
+		$master_data['table_name']='location';
+		$master_data['where']=' status=1 ';
+		$data['city']=$this->Common_model->get_master($master_data);
+		
+		$data['captcha']=$this->Common_model->get_captcha();
+		
 		$data['header']=$this->load->view('includes/header', $data, true);
 		$data['footer']=$this->load->view('includes/footer', $data, true);
 		$this->load->view('employee-signup',$data);
 	}
 
-	public function my_profile($emplyee_id)
+	public function my_profile($emplyee_id=0)
 	{
-
+		if($emplyee_id==0 || isset($this->session->userdata['loggedin_user']['user_id']))
+			$emplyee_id = $this->session->userdata['loggedin_user']['user_id'];
+		if(!$emplyee_id)
+			redirect(base_url());
 		$data=array();
 		$master_data=array();
 		$master_data['table_name']='education';
 		$master_data['where']=' status=1 and level=1';
 		$data['basic_education']=$this->Common_model->get_master($master_data);
 
+		$master_data=array();
 		$master_data['table_name']='education';
 		$master_data['where']=' status=1 and level=2 ';
 		$data['master_education']=$this->Common_model->get_master($master_data);
 
+		$master_data=array();
 		$master_data['table_name']='designation';
 		$master_data['where']=' status=1';
 		$data['designation']=$this->Common_model->get_master($master_data);
 
-
+		$master_data=array();
 		$master_data['table_name']='salary';
 		$master_data['where']=' status=1';
 		$data['salary']=$this->Common_model->get_master($master_data);
+		
 		$master_data=array();
-		  $master_data['table_name']='industry';
-		  $master_data['where']=' status=1 ';
-		  $data['industry']=$this->Common_model->get_master($master_data);
+		$master_data['table_name']='industry';
+		$master_data['where']=' status=1 ';
+		$data['industry']=$this->Common_model->get_master($master_data);
+		
+		$master_data=array();
+		$master_data['table_name']='functional';
+		$master_data['where']=' status=1 ';
+		$data['functional']=$this->Common_model->get_master($master_data);
 
-		  $master_data=array();
-		  $master_data['table_name']='functional';
-		  $master_data['where']=' status=1 ';
-		  $data['functional']=$this->Common_model->get_master($master_data);
+		$master_data=array();
+		$master_data['table_name']='state';
+		$master_data['where']=' status=1 ';
+		$data['state']=$this->Common_model->get_master($master_data);
 
-
-		  $master_data=array();
-		  $master_data['table_name']='employee';
-		  $master_data['where']=' id='.$emplyee_id;
-		  $data['employee']=$this->Common_model->get_master($master_data);
-
-
-
+		$master_data=array();
+		$master_data['table_name']='location';
+		$master_data['where']=' status=1 ';
+		$data['city']=$this->Common_model->get_master($master_data);
+		
+		$master_data=array();
+		$master_data['table_name']='employee';
+		$master_data['where']=' id='.$emplyee_id;
+		$data['employee']=$this->Common_model->get_master($master_data);
+		
+		$locations = array_column($data['city'], "state_id","id");
+		$data['employee'][0]['employee_state'] = $locations[$data['employee'][0]['employee_city']];
+		
 		$data['header']=$this->load->view('includes/header', $data, true);
 		$data['footer']=$this->load->view('includes/footer', $data, true);
 		$this->load->view('employee-signup',$data);
-
 	}
 
 	public function add_update()
@@ -118,42 +145,63 @@ class Employee  extends CI_Controller {
 		$status=$msg=$data='';
 		
 		$config = array(
-				array( 'field' => 'id','label' => 'status', 'rules'=> 'trim|integer|xss_clean' ),
-				array( 'field' => 'employee_resume_url','label' => 'status', 'rules'=> 'trim|xss_clean' ),
-				array( 'field' => 'employee_resume_name','label' => 'About company', 'rules'=> 'trim|xss_clean' ),
-				array( 'field' => 'employee_name','label' => 'Email', 'rules'=> 'trim|required|xss_clean' ),
-				array( 'field' => 'employee_email','label' => 'Contact Person', 'rules'=> 'trim|required|valid_email|is_unique[employee.email]|xss_clean'),
-				array( 'field' => 'employee_password','label' => 'Company Name',  'rules'=> 'trim|required|xss_clean'	),
-				array( 'field' => 'employee_exp_year','label' => 'address',  'rules'=> 'trim|numeric|xss_clean' ),
-				array( 'field' => 'employee_exp_month','label' => 'Industry',  'rules'=> 'trim|numeric|xss_clean'),
-				array( 'field' => 'employee_current_company','label' => 'Contact No', 'rules'=> 'trim|xss_clean' ),
-				array( 'field' => 'employee_current_from_date','label' => 'Contact No', 'rules'=> 'trim|xss_clean' ),
-				array( 'field' => 'employee_current_to_date','label' => 'Contact No', 'rules'=> 'trim|xss_clean' ),
-				array( 'field' => 'employee_current_salary','label' => 'Contact No', 'rules'=> 'trim|xss_clean' ),
-				array( 'field' => 'employee_expected_salary','label' => 'Contact No', 'rules'=> 'trim|xss_clean' ),
-				array( 'field' => 'employee_skills','label' => 'Contact No', 'rules'=> 'trim|xss_clean' ),
-				array( 'field' => 'employee_notice','label' => 'Contact No', 'rules'=> 'trim|xss_clean' ),
-				array( 'field' => 'employee_industry','label' => 'Contact No', 'rules'=> 'trim|numeric|xss_clean' ),
-				array( 'field' => 'employee_functional','label' => 'Contact No', 'rules'=> 'trim|numeric|xss_clean' ),
-				array( 'field' => 'traing_course','label' => 'Contact No', 'rules'=> 'trim|xss_clean' ),
-				array( 'field' => 'traing_certificates','label' => 'Contact No', 'rules'=> 'trim|xss_clean' ),
-				array( 'field' => 'employee_edu_basic','label' => 'Contact No', 'rules'=> 'trim|xss_clean' ),
-				array( 'field' => 'employee_edu_master','label' => 'Contact No', 'rules'=> 'trim|xss_clean' ),
-				array( 'field' => 'employee_address','label' => 'Contact No', 'rules'=> 'trim|xss_clean' ),
-				array( 'field' => 'employee_city','label' => 'Contact No', 'rules'=> 'trim|required|numeric|xss_clean' ),
-				array( 'field' => 'employee_pincode','label' => 'Contact No', 'rules'=> 'trim|numeric|xss_clean' ),
-				array( 'field' => 'employee_mobile_no','label' => 'Contact No', 'rules'=> 'trim|required|numeric|xss_clean' ),
-				array( 'field' => 'mode','label' => 'Contact No', 'rules'=> 'trim|required|xss_clean' )
+				array( 'field' => 'id','label' => 'ID', 'rules'=> 'trim|integer|xss_clean' ),
+				array( 'field' => 'employee_resume_url','label' => 'resume url', 'rules'=> 'trim|xss_clean' ),
+				array( 'field' => 'employee_resume_name','label' => 'resume name', 'rules'=> 'trim|xss_clean' ),
+				array( 'field' => 'employee_name','label' => 'Employee name', 'rules'=> 'trim|required|xss_clean' ),
+				array( 'field' => 'employee_exp_year','label' => 'employee_exp_year',  'rules'=> 'trim|numeric|xss_clean' ),
+				array( 'field' => 'employee_exp_month','label' => 'employee_exp_month',  'rules'=> 'trim|numeric|xss_clean'),
+				array( 'field' => 'employee_current_company','label' => 'employee_current_company', 'rules'=> 'trim|xss_clean' ),
+				array( 'field' => 'employee_current_from_date','label' => 'employee_current_from_date', 'rules'=> 'trim|xss_clean' ),
+				array( 'field' => 'employee_current_to_date','label' => 'employee_current_to_date', 'rules'=> 'trim|xss_clean' ),
+				array( 'field' => 'employee_current_salary','label' => 'employee_current_salary', 'rules'=> 'trim|xss_clean' ),
+				array( 'field' => 'employee_expected_salary','label' => 'employee_expected_salary', 'rules'=> 'trim|xss_clean' ),
+				array( 'field' => 'employee_skills','label' => 'employee_skills', 'rules'=> 'trim|xss_clean' ),
+				array( 'field' => 'employee_notice','label' => 'employee_notice', 'rules'=> 'trim|xss_clean' ),
+				array( 'field' => 'employee_industry','label' => 'employee_industry', 'rules'=> 'trim|numeric|xss_clean' ),
+				array( 'field' => 'employee_functional','label' => 'employee_functional', 'rules'=> 'trim|numeric|xss_clean' ),
+				array( 'field' => 'traing_course','label' => 'traing_course', 'rules'=> 'trim|xss_clean' ),
+				array( 'field' => 'traing_certificates','label' => 'traing_certificates', 'rules'=> 'trim|xss_clean' ),
+				array( 'field' => 'employee_edu_basic','label' => 'employee_edu_basic', 'rules'=> 'trim|xss_clean' ),
+				array( 'field' => 'employee_edu_master','label' => 'employee_edu_master', 'rules'=> 'trim|xss_clean' ),
+				array( 'field' => 'employee_address','label' => 'employee_address', 'rules'=> 'trim|xss_clean' ),
+				array( 'field' => 'employee_city','label' => 'employee_city', 'rules'=> 'trim|required|numeric|xss_clean' ),
+				array( 'field' => 'employee_state','label' => 'employee_state', 'rules'=> 'trim|required|numeric|xss_clean' ),
+				array( 'field' => 'employee_pincode','label' => 'employee_pincode', 'rules'=> 'trim|numeric|xss_clean' ),
+				array( 'field' => 'employee_mobile_no','label' => 'employee_mobile_no', 'rules'=> 'trim|required|numeric|xss_clean' ),
+				array( 'field' => 'mode','label' => 'Mode', 'rules'=> 'trim|required|xss_clean' )
 			);
+
+		if($this->input->post('id') == 0)
+		{
+			array_push($config,
+					array( 'field' => 'employee_email','label' => 'Email ID', 'rules'=> 'trim|required|valid_email|is_unique[employee.employee_email]|xss_clean'),
+					array( 'field' => 'employee_password','label' => 'Employee password',  'rules'=> 'trim|required|xss_clean'	)
+				);
+		}
+		
+		$captchaError = '';
+		if($this->input->post('captcha'))
+		{
+			array_push($config,
+					array( 'field' => 'captcha', 'label' => 'Password', 'rules' => 'trim|required|xss_clean' )
+					);
+			if($this->Common_model->check_captcha() == false)
+				$captchaError = "You must submit the word that appears in the image";
+		}
+		
 		$this->form_validation->set_rules($config);
-		if ($this->form_validation->run() == FALSE)
+		if ($this->form_validation->run() == FALSE || $captchaError!='')
 		{
 			$responseData['msg']=validation_errors();
+			$responseData['msg'].=$captchaError;
 		}
 		elseif(!empty($_POST))
 		{
 			$data = $this->input->post();
 			$data['mode'] =trim($data['mode']);
+			unset($data['employee_state']);
+			unset($data['captcha']);
 			$data['employee_current_from_date'] = date('Y-m-d',strtotime($data['employee_current_from_date']));
 			$data['employee_current_to_date'] = date('Y-m-d',strtotime($data['employee_current_to_date']));
 			$success=$this->Employee_model->add_update($data);
@@ -164,7 +212,7 @@ class Employee  extends CI_Controller {
 				{
 				 	$sendData=$data;
 				 	$sendData['employee_id']=$success;
-				 	$this->registration_mail($sendData);
+				 	@$this->registration_mail($sendData);
 					$responseData['msg']='Registration completed Activator link sent your email. Please click the link and activate your account!';
 				}else
 				{
@@ -213,8 +261,12 @@ class Employee  extends CI_Controller {
 
 	public function activate($id)
 	{
+		$sendData=array();
 		$sendData['id']=$id;
-		$activate=$this->Employee_model->activate($sendData);
+		if($sendData['id'])
+			$activate=$this->Employee_model->activate($sendData);
+		else
+			$activate=0;
 		if($activate>0)
 		{
 			$this->session->set_flashdata('msg', '<div class="alert alert-success text-center">Activated successfully, Please Login!</div>');
@@ -468,7 +520,7 @@ class Employee  extends CI_Controller {
   }
 public function upload_resume()
   	{
-  		header('Access-Control-Allow-Origin: *');
+  		//header('Access-Control-Allow-Origin: *');
 		$return_data=array();
 		$return_data['status']='error';
 		$return_data['data']=array();
@@ -513,7 +565,12 @@ public function upload_resume()
 		$json['status']='err';
 		$json['data']='';
 
-
+		$master_data=array();
+		$master_data['table_name']='location';
+		$master_data['where']=' status !=3';
+		$locations = $this->Common_model->get_master($master_data);
+		$location = array_column($locations, "name","id");
+		
 		$master_data=array();
 		$master_data['id']=$_POST['id'];
 		$list=$this->Employee_model->get_employee($master_data);	
@@ -521,13 +578,12 @@ public function upload_resume()
 		if(!empty($list))
 		{
 			$list[0]['created_date'] = common_date_format($list[0]['created_date']);
+			$list[0]['employee_city'] = $location[$list[0]['employee_city']];
 			
-
 			$json['data']=$list[0];
 			$json['status']='ok';
 		}
-		echo json_encode($json);	
-
+		echo json_encode($json);
   }
 
   public function add_update_aster()

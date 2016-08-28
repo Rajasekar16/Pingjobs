@@ -1039,7 +1039,7 @@ function draw_jobs_ajax(data)
                     </div>\
                     <div class="col-md-12 emp-job-buttons">\
                       <span class="emp-job-postedby">Posted by <strong>HR, '+data[i].days_ago_str+'</strong></span>\
-                      <a href="'+base_url+'job/jobdetails/'+data[i].id+'" id=""  class="btn btn-primary pull-right">View Job</a>\
+                      <a href="'+base_url+'job/jobdetails/'+data[i].job_name+'" id=""  class="btn btn-primary pull-right">View Job</a>\
                     </div>\
                   </div>');
 		}
@@ -1070,7 +1070,7 @@ function apply_job()
 	var user_id=$('#user_id').val();
 	$.ajax({
 		url:base_url+'job/apply_job',
-		data:'user_id='+user_id+'&job_id='+job_id,
+		data:'user_id='+user_id+'&job_id='+job_id+'&csrf_token_name='+document.forms[0].csrf_token_name.value,
 		dataType:'json',
 		method: 'POST',
 		success:function(data)
@@ -1133,7 +1133,7 @@ function approve_job_applied(id)
 {
 	$.ajax({
                 url:base_url+'admin/approve_job_applied',
-                data: {'id':id},
+                data: {'id':id,'csrf_token_name':document.forms[0].csrf_token_name.value},
                 dataType:'json',
                 method: 'POST',
                 beforeSend: function(){
@@ -1212,7 +1212,7 @@ function view_employee(id)
 {
 	$.ajax({
                 url:base_url+'index.php/employee/getDetail',
-                data: {'id':id},
+                data: {'id':id,'csrf_token_name':document.forms[0].csrf_token_name.value},
                 dataType:'json',
                 method: 'POST',
                 beforeSend: function(){

@@ -83,10 +83,17 @@ class Job extends CI_Controller {
 
 	}
 
-	public function employerJobs()
+	public function employer()
 	{
 		$employers = $this->uri->segment(3);
-		$_POST['employer_id'] = $employers;
+		$master_data=array();
+		$master_data['table_name']='employer';
+		$master_data['where']=' link = "'.$employers.'"';
+		$data['employer']=$this->Common_model->get_master($master_data);
+		
+		if(!isset($data['employer'][0]['id']))
+			redirect(base_url()."job/jobsearch");
+		$_POST['employer_id'] = $data['employer'][0]['id'];
 		$this->jobsearch();
 	}
 
@@ -112,6 +119,7 @@ class Job extends CI_Controller {
 				$_POST['employer_id'] =@$this->session->userdata['loggedin_employer']['id'];
 				$_POST['post_date'] = currentGMT('datetime');
 			}
+			$_POST['link'] = str_replace(' ','-',$_POST['company_name']);
 			$success=$this->Common_model->add_update($_POST);
 			if($success>0)
 			{
@@ -347,7 +355,24 @@ class Job extends CI_Controller {
 				$sendData['salary']=$where_salary;
 			}
 		}
-
+		if($educationId != ''){
+			$master_data=array();
+			$master_data['table_name']='job_education_mapping';
+			$master_data['where']=' status=1 AND education_id = '.$educationId;
+			$jobEducationMapping=$this->Common_model->get_master($master_data);
+			
+			if(!empty($jobEducationMapping))
+				$sendData['where']= " job.id IN (".implode(",",array_column($jobEducationMapping, "job_id")).") ";
+			else{
+				$jsonData['job']=array();
+				$jsonData['total_group']=0;
+				echo json_encode($jsonData);exit;
+			}
+		}
+		if($jobTypeId!='')
+		{
+			$sendData['job_type_id']= ' job_type_id = '.$jobTypeId;
+		}
 		if($experience!='' && $experience>0)
 		{
 			$sendData['experience']=' ( job_experience_from >="'.$experience .'" OR job_experience_to <= "'.$experience .'") ';
@@ -521,6 +546,18 @@ class Job extends CI_Controller {
 	{
 		$data=array();
 		$sendData=array();
+		if(!is_numeric($id))
+		{
+			$master_data=array();
+			$master_data['table_name']='job';
+			$master_data['where']=' job_name="'.$id.'" ';
+			$jobs=$this->Common_model->get_master($master_data);
+			if(isset($jobs[0]['id']))
+				$id = $jobs[0]['id'];
+			else
+				redirect('job/jobSearch');
+		}
+			
 		if($id>0)
 		{
 			$sendData['where']=' job_status!=3 and job.id='.$id ;

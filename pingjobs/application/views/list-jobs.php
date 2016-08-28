@@ -25,7 +25,7 @@
 				</ul>
 				<ul class="nav navbar-nav navbar-right">
 					<li>
-						<a href="<?php echo base_url();?>admin/postjob/">
+						<a href="<?php echo base_url();?>admin/<?php echo (isset($admin)) ? 'postjob' : 'postjobs'; ?>/">
 							<i class="glyphicon glyphicon-envelope"></i> Post Job
 						</a>
 					</li>
@@ -53,9 +53,11 @@
 	</div>
 </div>
 <script type="text/javascript">
-  /* gData=JSON.parse('<?php echo $jobs; ?>');
+<?php
+/* gData=JSON.parse('echo $jobs; ');
   draw_jobs_header();
   draw_jobs_grid();*/
+?>
 $(document).ready(function() {
 	var DT = $('#example').DataTable( {
 		data: <?php echo $jobs; ?>,
@@ -66,10 +68,12 @@ $(document).ready(function() {
 			{ title: '#',  data: "id", orderable:false },
 			{ title: "Company",  data: "company_name" },
 			{ title: "Title",  data: "job_title" },
-			{ title: "Skills",  data: "job_key_skill", className:"lavender" },
-			{ title: "Experience",  data: "job_experience_from", render : function(data, type, row) { if(!data) return 0; return data+' - '+ row.job_experience_to; } },
-			{ title: "Salary",  data: "job_salary_from", render : function(data, type, row) { if(!data) return 0; return data+' - '+ row.job_salary_to; } },
+			{ title: "Job Type",  data: "job_type_name" },
+			{ title: "Skills",  data: "primary_skills", className:"lavender", render : function(data, type, row) { return data+'<br>('+row.job_key_skill+')'; } },
+			//{ title: "Experience",  data: "job_experience_from", render : function(data, type, row) { if(!data) return 0; return data+' - '+ row.job_experience_to; } },
+			//{ title: "Salary",  data: "job_salary_from", render : function(data, type, row) { if(!data) return 0; return data+' - '+ row.job_salary_to; } },
 			{ title: "Positions",  data: "job_no_postition" },
+			{ title: "Industry",  data: "industry_name" },
 			{ title: "Functional",  data: "functional_name" },
 			{ title: "Location",  data: "location_name" },
 			{ title: "Applied Count",  data: "applied_count", className:"text-center", render:function(data, type, row){
@@ -77,7 +81,7 @@ $(document).ready(function() {
 			} },
 			{ title: "Status",  data: "status_str", className:"text-center", visible:false },
 			{ title: "Status",  data: "status_str", className:"text-center", render : function(data, type, row) { return '<a title ="'+row.status_str+'" class="glyphicon glyphicon-stop '+row.status_class+' tool-tip"></a>'; } },
-			{ title: "Manage", orderable:false,  data: "id", render : function(data, type, row) { return '<a data-toggle="tooltip" data-placement="left" title="Edit" href="'+base_url+'admin/postjob/'+row.id+'/"  class="glyphicon glyphicon-edit btn btn-primary btn-action"></a><a onclick="delete_job('+row.id+')" data-toggle="tooltip" data-placement="right" title="Remove" class="glyphicon glyphicon-remove btn btn-danger btn-action"></a>'; } }
+			{ title: "Manage", orderable:false,  data: "id", render : function(data, type, row) { return '<a data-toggle="tooltip" data-placement="left" title="Edit" href="'+base_url+'admin/<?php echo (isset($admin)) ? 'postjob' : 'postjobs'; ?>/'+row.id+'/"  class="glyphicon glyphicon-edit btn btn-primary btn-action"></a><a onclick="delete_job('+row.id+')" data-toggle="tooltip" data-placement="right" title="Remove" class="glyphicon glyphicon-remove btn btn-danger btn-action"></a>'; } }
 		],
 		"createdRow": function( row, data, dataIndex ) {
 			$(row).attr("id", 'job_row_'+data.id );

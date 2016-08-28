@@ -18,7 +18,7 @@
         </div> 
       </div>
     </div>
-
+<?php echo form_open('');?>
       <div>
         <table class="table table-striped">
           <thead id="master_table_header">
@@ -51,7 +51,7 @@
         </table>
       </div>
     </div>
-
+</form>
 <?php echo $footer; ?>
 
 

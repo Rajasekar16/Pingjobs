@@ -4,7 +4,7 @@
     <div class="row">
       <div class="col-md-6">
         <div class="page-header">
-        <h3 class="light">Skills Management</h3>
+        <h3 class="light">Primary Skills Management</h3>
         </div>
       </div>
       <div class="col-md-6 pad-top-10">

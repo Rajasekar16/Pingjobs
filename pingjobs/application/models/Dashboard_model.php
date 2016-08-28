@@ -14,9 +14,10 @@ class Dashboard_model extends CI_Model
     public function get_dashboard()
     {   
 		$sql = 'SELECT 
-				(SELECT COUNT(*) FROM employee) AS employeecount,
-				(SELECT COUNT(*) FROM employer) AS employercount,
-				(SELECT COUNT(*) FROM job) AS jobcount
+				(SELECT COUNT(id) FROM employee WHERE employee_status < 3) AS employeecount,
+				(SELECT COUNT(id) FROM employer WHERE status < 3) AS employercount,
+				(SELECT COUNT(id) FROM job WHERE job_status < 3) AS jobcount,
+				0 AS applied_jobs
 				FROM dual';
         $query=$this->db->query($sql);
         $result=$query->row_array();

@@ -1,7 +1,7 @@
 <?php echo $header; ?>
     <!-- Begin page content -->
     <!-- Tag select reference http://timschlechter.github.io/bootstrap-tagsinput/examples/ -->
-       
+<?php echo form_open(""); ?>       
     <div class="container container-home signup-forms">
       <div class="row">
         <div class="col-md-12 box">
@@ -20,7 +20,7 @@
                     <?php }else{?>
                    
 
-                      <button data-toggle="modal" data-target="#employeelogin"  class="btn btn-primary">Login to Apply</button> &nbsp;&nbsp;&nbsp;
+                      <button type="button" data-toggle="modal" data-target="#employeelogin"  class="btn btn-primary">Login to Apply</button> &nbsp;&nbsp;&nbsp;
                     
                     <?php } ?>
                   </div>
@@ -33,22 +33,26 @@
                       <td>Job Description:</td>
                       <td><?php echo $data['job_desc'];?></td>
                     </tr>
+                    <?php if($data['job_experience_from']): ?>
                     <tr>
                       <td>Experience:</td>
                       <td><?php echo $data['job_experience_from'];?> - <?php echo $data['job_experience_to'];?> Years </td>
                     </tr>
+                    <?php endif; ?>
                     <tr>
                       <td width="20%">No. of Position  :</td>
                       <td width="80%"> <?php echo $data['job_no_postition'];?>  </td>
                     </tr>
+                    <?php if($data['job_salary_from']): ?>
                     <tr>
                       <td>Salary:</td>
                       <td><?php echo $data['job_salary_from'] .' - '. $data['job_salary_to'] .'laks';?></td>
                     </tr>
-                    <tr>
+                    <?php endif; ?>
+                    <!-- <tr>
                       <td>Desired Profile :</td>
                       <td></td>
-                    </tr>
+                    </tr> -->
                     <tr>
                       <td>Industry Type:</td>
                       <td><?php echo $data['industry_name'];?></td>
@@ -86,14 +90,16 @@
                       <td>Email:</td>
                       <td><?php echo $data['employer_email'];?></td>
                     </tr> -->
+                    <?php if($data['employer_website']):?>
                     <tr>
                       <td>Website:</td>
                       <td><?php echo $data['employer_website'];?></td>
                     </tr>
-                    <tr>
+                    <?php endif;?>
+                    <!-- <tr>
                       <td>Job Posted:</td>
                       <td><?php echo $data['post_date'];?> </td>
-                    </tr>
+                    </tr> -->
                   </tbody>
                 </table>
                 <div class="col-md-12">
@@ -107,7 +113,7 @@
                       <button type="button" id=""   onclick="apply_job()"  class="btn btn-primary apply_job">Apply</button> &nbsp;&nbsp;&nbsp;
                       <?php } ?>
                     <?php }else{?>
-                      <button type="submit" data-toggle="modal" data-target="#employerlogin"  class="btn btn-primary">Login to Apply</button> &nbsp;&nbsp;&nbsp;
+                      <button type="button" data-toggle="modal" data-target="#employerlogin"  class="btn btn-primary">Login to Apply</button> &nbsp;&nbsp;&nbsp;
                       
                     <?php } ?>
                   </div>
@@ -118,7 +124,7 @@
         
       </div>
     </div>
-
+</form>
 <?php echo $footer; ?>
 <script type="text/javascript">
 

@@ -151,6 +151,66 @@ class Common_model extends CI_Model
         }
         
     }
+    
+	public function  get_captcha()
+	{
+		$this->load->helper('captcha');
+
+		$vals = array(
+			'word_length'=>6,
+		    'img_path' => './captcha/',
+		    'img_url' => base_url().'captcha/',
+			'font_path' => './fonts/MuseoSansRounded-900-webfont.ttf',
+			'img_width' => '150',
+			'img_height' => 30,
+			'expiration' => 3600
+		    );
+		
+		$cap = create_captcha($vals);
+		
+		$data = array(
+		    'captcha_time' => $cap['time'],
+		    'ip_address' => $this->input->ip_address(),
+		    'word' => $cap['word']
+		    );
+		
+		$query = $this->db->insert_string('captcha', $data);
+		$this->db->query($query);
+		
+		$str = '';
+		$str = '<div class="form-group required">
+					<label class="col-md-5 control-label" for="captcha">Enter captcha:</label>  
+					<div class="col-md-4">'.
+						$cap['image'].'
+					</div>
+					<div class="col-md-3 pad-lt-0">
+						<input class="form-control" placeholder="Enter captcha" maxlength="'.strlen($cap['word']).'" type="text" name="captcha" id="captcha" value="" required="required" />
+					</div>
+				</div>';
+		return $str;
+	}
+	
+	public function check_captcha($captcha='')
+	{
+		// First, delete old captchas
+		$expiration = time()-3600; // one hour limit
+		$this->db->query("DELETE FROM captcha WHERE captcha_time < ".$expiration);
+		
+		$captcha = ($captcha=='') ? $this->input->post('captcha') : $captcha;
+		
+		// Then see if a captcha exists:
+		$sql = "SELECT COUNT(*) AS count FROM captcha WHERE word = ? AND ip_address = ? AND captcha_time > ?";
+		$binds = array($captcha, $this->input->ip_address(), $expiration);
+		$query = $this->db->query($sql, $binds);
+		$row = $query->row();
+		
+		if ($row->count == 0)
+		{
+			return false;
+		}
+		return true;
+	}
+	
 }
 
 ?>

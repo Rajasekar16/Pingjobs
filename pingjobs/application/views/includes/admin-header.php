@@ -92,7 +92,7 @@
 								Masters <span class="caret"></span>
 							</a>
 							<ul class="dropdown-menu" role="menu">
-								<li><a href="<?php echo base_url('admin/skillset') ?>">Skills Master</a></li>
+								<li><a href="<?php echo base_url('admin/skillset') ?>">Primary Skills Master</a></li>
 								<li><a href="<?php echo base_url('admin/education') ?>">Education Master</a></li>
 								<li><a href="<?php echo base_url('admin/industry') ?>">Industry Master</a></li>
 								<li><a href="<?php echo base_url('admin/functional') ?>">Functional Master</a></li>

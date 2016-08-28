@@ -44,8 +44,8 @@ $logo=@$employer['logo'];
 			echo form_open_multipart($action,array('class'=>"form-horizontal","id"=>"add_employee","onsubmit"=>"return employer_validation();"));
 			?>
 				<?php echo $this->session->flashdata('msg'); ?>
-				<!-----CUSTOM MESSAGE START------>
-				<?php echo validation_errors(); ?>
+				<!-----CUSTOM MESSAGE START----
+				<?php echo validation_errors(); ?>-->
 				<!-----CUSTOM MESSAGE END------>
 				<input type="hidden" id ="id" name ="id" value ="<?php  echo $id; ?>"/>
 				<div class="col-md-6">
@@ -76,7 +76,7 @@ $logo=@$employer['logo'];
 						<div class="form-group required">
 							<label class="col-md-5 control-label " for="email">Email</label>  
 							<div class="col-md-7">
-								<input id="email" name="email" type="email" onblur="verify_employer_email(this, this.value)" placeholder="Enter Email Address" class="form-control input-md" required="required" <?php if ($id > 0) echo "disabled value='".$email."'"; ?>  />
+								<input id="email" name="email" type="email" onblur="verify_employer_email(this, this.value)" placeholder="Enter Email Address" class="form-control input-md" required="required" <?php if ($id > 0) echo "disabled"; echo " value='".$email."'"; ?>  />
 								<div id="verify_email" class="errorBox" ></div>
 								<input type="hidden" id="email_available_flag" value="0" />
 							</div>
@@ -263,6 +263,7 @@ $logo=@$employer['logo'];
 							<textarea id="about_company" name="about_company" class="form-control" required><?php  echo $about_company; ?></textarea>
 						</div>
 					</div>
+					<?php echo @$captcha; ?>
 					
 					<?php if(isset($addBy)){ ?>
 					<!-- Select Basic -->

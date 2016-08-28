@@ -55,12 +55,21 @@ $(document).ready(function() {
 						<?php if(!$loggedin_employer && !$loggedin_user): ?>
 						<a class="btn btn-primary ping-btn-primary" data-toggle="modal" data-target="#employerlogin">Employer Login</a>
 						<a class="btn btn-primary ping-btn-primary" data-toggle="modal" data-target="#employeelogin">Employee Login</a>
-						<?php else: ?>
+						<?php elseif($loggedin_employer): ?>
 						<a class="btn btn-primary ping-btn-primary" href="<?php echo SITE_URL.'Employer/my_profile'; ?>">
 							<i class="glyphicon glyphicon-user"></i>
 							<?php echo @$this->session->userdata['loggedin_employer']['email'];?>
 						</a>
 						<a class="btn btn-primary ping-btn-primary" href="<?php  echo SITE_URL;?>employer/logout">
+							<i class="glyphicon glyphicon-log-out color-ccc"></i>
+							Signout
+						</a>
+						<?php elseif($loggedin_user): ?>
+						<a class="btn btn-primary ping-btn-primary" href="<?php echo SITE_URL.'employee/my_profile'; ?>">
+							<i class="glyphicon glyphicon-user"></i>
+							<?php echo @$this->session->userdata['loggedin_user']['employee_email'];?>
+						</a>
+						<a class="btn btn-primary ping-btn-primary" href="<?php  echo SITE_URL;?>employee/logout">
 							<i class="glyphicon glyphicon-log-out color-ccc"></i>
 							Signout
 						</a>
@@ -72,7 +81,8 @@ $(document).ready(function() {
 	</header>
     <!-- Fixed navbar -->
     <!--<nav class="navbar navbar-default navbar-fixed-top">-->
-    <nav class="navbar navbar-default ping-navbar" data-spy="affix" data-offset-top="200">
+    <div class="static-height">
+    <nav class="navbar navbar-default ping-navbar" data-spy="affix" data-offset-top="185">
       <div class="container">
         <div class="navbar-header">
           <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
@@ -85,12 +95,24 @@ $(document).ready(function() {
         </div>
         <div id="navbar" class="collapse navbar-collapse">
           <ul class="nav navbar-nav nav-margins">
-          	  <li><a href="<?php  echo SITE_URL;?>job/jobsearch/industry/it">IT Jobs</a></li>
-              <li><a href="<?php  echo SITE_URL;?>job/jobsearch/industry/bpo">BPO</a></li>
-              <li><a href="<?php  echo SITE_URL;?>job/jobsearch/education/mba">MBA</a></li>
-              <li><a href="<?php  echo SITE_URL;?>job/jobsearch/jobs/Govt-Jobs">Govt</a></li>
-              <li><a href="<?php  echo SITE_URL;?>job/jobsearch/jobs/fresher">Freshers</a></li>
-              <li><a href="<?php  echo SITE_URL;?>job/jobsearch/jobs/Walk-ins">Walk-ins</a></li>
+          	  <li class="<?php echo ($this->uri->segment(4)=='it')?'active':''?>">
+          	  	<a href="<?php  echo SITE_URL;?>job/jobsearch/industry/it">IT Jobs</a>
+          	  </li>
+              <li class="<?php echo ($this->uri->segment(4)=='bpo')?'active':''?>">
+              	<a href="<?php  echo SITE_URL;?>job/jobsearch/industry/bpo">BPO</a>
+              </li>
+              <li class="<?php echo ($this->uri->segment(4)=='mba')?'active':''?>">
+              	<a href="<?php  echo SITE_URL;?>job/jobsearch/education/mba">MBA</a>
+              </li>
+              <li class="<?php echo ($this->uri->segment(4)=='Govt-Jobs')?'active':''?>">
+              	<a href="<?php  echo SITE_URL;?>job/jobsearch/jobs/Govt-Jobs">Govt</a>
+              </li>
+              <li class="<?php echo ($this->uri->segment(4)=='fresher')?'active':''?>">
+             	 <a href="<?php  echo SITE_URL;?>job/jobsearch/jobs/fresher">Freshers</a>
+              </li>
+              <li class="<?php echo ($this->uri->segment(4)=='Walk-ins')?'active':''?>">
+              	<a href="<?php  echo SITE_URL;?>job/jobsearch/jobs/Walk-ins">Walk-ins</a>
+              </li>
              
             <?php
              if($loggedin_employer){?>
@@ -116,15 +138,14 @@ $(document).ready(function() {
               </ul>
             </li> -->
             <?php } else if($loggedin_user){?>
-              <li class="<?php echo ($this->uri->segment(1)=='job')?'active':''?>"><a href="/job/jobsearch">Jobs</a></li>
-			  <li class="<?php echo ($this->uri->segment(2)=='my_profile')?'active':''?>"><a href ="<?php echo SITE_URL.'Employee/my_profile/'.$loggedin_id; ?>"><i class="glyphicon glyphicon-star color-ccc"></i> My Profile</a></li>
+              <li class="<?php echo ($this->uri->segment(1)=='job')?'active':''?>"><a href="<?php echo base_url();?>job/jobsearch">Jobs</a></li>
+			 <!--  <li class="<?php echo ($this->uri->segment(2)=='my_profile')?'active':''?>"><a href ="<?php echo base_url().'Employee/my_profile/'.$loggedin_id; ?>"><i class="glyphicon glyphicon-star color-ccc"></i> My Profile</a></li>
              <li class="dropdown">
               <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="glyphicon glyphicon-user"></i> <?php echo @$this->session->userdata['loggedin_user']['employee_email'];?> <span class="caret"></span></a>
               <ul class="dropdown-menu" role="menu">
-                
                 <li><a href="<?php  echo SITE_URL;?>employee/logout"><i class="glyphicon glyphicon-log-out color-ccc"></i> Signout</a></li>
               </ul>
-            </li>
+            </li>-->
             <?php }else {?>
               <!--<li><a data-toggle="modal" data-target="#employerlogin"><i class="glyphicon glyphicon-briefcase"></i> Employer Login</a></li>
               <li><a data-toggle="modal" data-target="#employeelogin"><i class="glyphicon glyphicon-user"></i> Employee Login</a></li>-->
@@ -134,7 +155,8 @@ $(document).ready(function() {
         </div>
       </div>
     </nav>
+    </div>
     <!-- <div class="container">
 		<div class="message-div"></div> 
     </div>-->
-	<div class="container">
+	<div class="container minHeight">
