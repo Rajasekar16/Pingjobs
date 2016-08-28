@@ -40,11 +40,11 @@ class Dashboard_model extends CI_Model
 				//$sql ='SELECT  date(created_date) AS y, count(*) AS a FROM employee WHERE created_date>= "'.$start_date.'"  and LOWER(employee_city)="'.strtolower($data['location_name']).'" GROUP BY  date(created_date), LOWER(employee_city) ';
 				$sql ='SELECT  y, sum(driver.a) AS  a,sum(driver.b)  AS b,sum(driver.c) AS c  FROM
 				( 
-				(SELECT date(created_date) AS y, count(*) AS a ,0 AS b,0 AS c FROM employee WHERE created_date>= "'.$start_date.'" and LOWER(employee_city)="bangalore" GROUP BY date(created_date))
+				(SELECT date(created_date) AS y, count(*) AS a ,0 AS b,0 AS c FROM employee WHERE created_date>= "'.$start_date.'" and employee_city="1" GROUP BY date(created_date))
 				UNION 
-				(SELECT date(created_date) AS y, 0 AS a, count(*) AS b,0 AS c FROM employee WHERE created_date>= "'.$start_date.'" and LOWER(employee_city)="chennai" GROUP BY date(created_date))
+				(SELECT date(created_date) AS y, 0 AS a, count(*) AS b,0 AS c FROM employee WHERE created_date>= "'.$start_date.'" and employee_city="2" GROUP BY date(created_date))
 				UNION
-				(SELECT date(created_date) AS y, 0 AS a,0 AS b,count(*) AS b FROM employee WHERE created_date>= "'.$start_date.'" and LOWER(employee_city)="hyderabad" GROUP BY date(created_date))
+				(SELECT date(created_date) AS y, 0 AS a,0 AS b,count(*) AS b FROM employee WHERE created_date>= "'.$start_date.'" and employee_city="3" GROUP BY date(created_date))
 				) AS driver  GROUP BY y';
 			break;
 			case "skill_combain":

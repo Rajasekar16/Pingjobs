@@ -110,7 +110,11 @@ public function resume_search()
 				
 				foreach($record as $key=>$row)
 				{
-					$record[$key]['education'] = 'Basic : '.$educations[$record[$key]['employee_edu_basic']].'<br>Master : '. $educations[$record[$key]['employee_edu_master']];
+					$record[$key]['education'] = '';
+					if(isset($educations[$record[$key]['employee_edu_basic']]))
+						$record[$key]['education'] = 'Basic : '.$educations[$record[$key]['employee_edu_basic']];
+					elseif(isset($educations[$record[$key]['employee_edu_master']]))
+						$record[$key]['education'] .= '<br>Master : '. $educations[$record[$key]['employee_edu_master']];
 					$record[$key]['expry'] = 'Exprience : '.$record[$key]['employee_exp_year'].'.'. $record[$key]['employee_exp_month'].' Yrs <BR> Notice Period '.$record[$key]['employee_notice'].' Days <br>Salary : '.$record[$key]['employee_current_salary'].' (L/A)';
 					$record[$key]['detail'] = $record[$key]['employee_email'].'<BR>'. $record[$key]['employee_mobile_no'].'<BR>Current :'.$record[$key]['employee_city_name'].'<BR>Preferred : '.($record[$key]['preferred_location']|'Any');
 					$record[$key]['created_date'] = common_date_format($record[$key]['created_date']);
