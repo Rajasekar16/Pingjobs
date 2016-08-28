@@ -248,7 +248,7 @@ class Admin extends CI_Controller {
 		
 		$isFileUpload = false;
 		$error = '';
-		if(!empty(trim($_FILES['company_logo']['name'])))
+		if(!empty($_FILES['company_logo']['name']))
 		{
 			$isFileUpload = true;
 			if($_FILES['company_logo']['error'] > 0)

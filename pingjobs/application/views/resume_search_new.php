@@ -472,7 +472,7 @@ function search_resume() {
     var $table = $('#eventsTable');
     var input_data = $('#search-form').serialize();
     $('#eventsTable').bootstrapTable({
-        url: gBaseUrl+'/search/resume_search?' + input_data,
+        url: gBaseUrl+'search/resume_search?' + input_data,
         method: 'post',
 		data:{'csrf_token_name':$("[name=csrf_token_name]").val()},
         dataType: 'json',
