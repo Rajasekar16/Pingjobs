@@ -136,6 +136,7 @@
 					</form>
 				</div>
 				<div class="fb-like-page" data-spy="affix" data-offset-top="185">
+					<h5 class="text-center">LIKE US ON FACEBOOK TO GET IMMEDIATE JOB UPDATE</h5>
 					<div class="fb-page" data-href="https://facebook.com/pingjobsforfreshersandexperience/" data-tabs="timeline" data-width="300" data-height="250" data-small-header="false" data-adapt-container-width="true" data-hide-cover="false" data-show-facepile="true">
 						<blockquote cite="https://facebook.com/pingjobsforfreshersandexperience/" class="fb-xfbml-parse-ignore">
 							<a href="https://facebook.com/pingjobsforfreshersandexperience/">Pingjobs</a>
