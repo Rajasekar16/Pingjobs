@@ -430,28 +430,6 @@ code {
 	padding: 10px 0;
 }
 
-@media (min-width: 768px) {
-    .col-sm-5ths {
-        width: 20%;
-        float: left;
-    }
-}
-
-@media (min-width: 992px) {
-    .col-md-5ths {
-        width: 20%;
-        float: left;
-    }
-}
-
-@media (min-width: 1200px) {
-    .col-lg-5ths {
-        width: 20%;
-        float: left;
-    }
-}
-
-
 /* Check box and radio buttons */
 .checkbox {
 padding-left: 20px; }
@@ -669,11 +647,6 @@ input[type="radio"] .styled:checked + label::after {
 {
 	color: #f00;
 }
-.pingjobs-logo{
-    position: relative;
-    left: 35px;
-    top: 100px;
-}
 .ping-btn-primary{
 	background-color:#005e9d !important;
 	margin-right:15px;
@@ -694,6 +667,9 @@ input[type="radio"] .styled:checked + label::after {
 .ping-navbar ul > li{
 	background:#005e9d url("../images/menu-strip.png") no-repeat;
 }
+.ping-navbar ul > li:first-child{
+	background:#005e9d;
+}
 .navbar .navbar-nav {
     display: inline-block;
     float: none;
@@ -712,6 +688,16 @@ nav.affix {
 .home-aside.affix {
     position: fixed;
     top: 80px;
+}
+.hero-unit.home-aside.affix {
+    width:22%;
+}
+.jobs-by.home-aside .box{
+	max-height:250px;
+    overflow:auto;
+}
+.jobs-by.home-aside.affix {
+    width:15%;
 }
 .navbar .navbar-collapse {
     text-align: center;
@@ -894,4 +880,68 @@ nav.affix {
 }
 .static-height{
 	min-height:55px;
+}
+
+.emp-job-holder pre, .job-desc {
+	white-space:pre-line;
+	word-break:break-word;
+	background:none;
+	border:0;
+	font-size:14px;
+	font-family:'Open Sans', sans-serif;
+	padding:0;
+}
+.header-logo-title{
+	width:45%;
+	color:#0e0404;
+	display:block;
+	margin-top:5px;
+}
+.fb-like-page.affix {
+	margin-top:20px;
+	width:100%;
+}
+/* For mobile only */
+@media screen and (max-width: 385px) {
+  .ping-header-new .mobile-view-hide {
+    	display:none !important;
+	}
+}
+/* For mobile and tablet only */
+@media screen and (max-width: 768px) {
+   .mobile-view-show, .navbar .navbar-nav{
+		display:block !important;
+	}
+	.navbar-nav{
+		margin-top:0px !important;	
+	}
+	.ping-navbar ul > li{
+		z-index:1000;
+	}
+	.home-aside.affix, .home-aside affix-top{
+		position: initial !important;
+	}
+	.header-logo-title{
+		display:none !important;
+	}
+}
+@media (min-width: 768px) {
+    .col-sm-5ths {
+        width: 20%;
+        float: left;
+    }
+}
+
+@media (min-width: 992px) {
+    .col-md-5ths {
+        width: 20%;
+        float: left;
+    }
+}
+
+@media (min-width: 1200px) {
+    .col-lg-5ths {
+        width: 20%;
+        float: left;
+    }
 }

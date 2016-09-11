@@ -269,11 +269,11 @@ else
 			</div>
 			
 			<!-- Select Basic -->
-			<div class="form-group">
+			<div class="form-group hide">
 			  <label class="col-md-5 control-label" for="selectbasic">Premium jobs</label>
 			  <div class="col-md-7">
 				<label class="checkbox-inline" for="checkbox-1">
-					<input type="checkbox" name="premium_jobs" id="premium_jobs" value="1" <?php echo (@$job_data['premium_jobs'] == 1) ? 'checked="checked"':''?> style="position:relative;" > 
+					<input type="checkbox" name="premium_jobs" id="premium_jobs" value="1" <?php echo (@$job_data['premium_jobs'] == 1 || !isset($job_data['premium_jobs'])) ? 'checked="checked"':''?> style="position:relative;" > 
 				</label>
 			  </div>
 			</div>

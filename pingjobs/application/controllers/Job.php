@@ -258,6 +258,7 @@ class Job extends CI_Controller {
 		$sendData['limit']=$limit;
 
 		$_POST['search']=1;
+		$primary_skills=$this->input->post('primary_skills');#@$_POST['skills'];
 		$skills=$this->input->post('skills');#@$_POST['skills'];
 		$location=$this->input->post('location');#@$_POST['location'];
 		$industry=$this->input->post('industry');#@$_POST['industry'];
@@ -381,6 +382,10 @@ class Job extends CI_Controller {
 		{
 			$sendData['employer_id']= $employerId ;
 		}
+		if($primary_skills!='' && $primary_skills>0)
+		{
+			$sendData['primary_skills']= $primary_skills ;
+		}
 
 		if($last_days!='' && $last_days>0)
 		{
@@ -419,6 +424,7 @@ class Job extends CI_Controller {
 	{
 		$data=array();
 		$data['searchSkills']='';
+		$data['searchPrimarySkills']='';
 		$data['searchOrderby']='';
 		$data['searchLocation']='';
 		$data['searchIndustry']='';
@@ -433,13 +439,15 @@ class Job extends CI_Controller {
 		if($this->uri->segment(3))
 		{
 			if($this->uri->segment(3) == "industry")
-				$data['searchIndustry']=$this->uri->segment(4);
-			if($this->uri->segment(3) == "jobs-in")
-				$data['searchLocation']=$this->uri->segment(4);
-			if($this->uri->segment(3) == "jobs")
-				$data['searchJobType']=$this->uri->segment(4);
-			if($this->uri->segment(3) == "education")
-				$data['searchEducation']=$this->uri->segment(4);
+				$data['searchIndustry']=xss_clean($this->uri->segment(4));
+			elseif($this->uri->segment(3) == "jobs-in")
+				$data['searchLocation']=xss_clean($this->uri->segment(4));
+			elseif($this->uri->segment(3) == "jobs")
+				$data['searchJobType']=xss_clean($this->uri->segment(4));
+			elseif($this->uri->segment(3) == "education")
+				$data['searchEducation']=xss_clean($this->uri->segment(4));
+			elseif($this->uri->segment(3) == "skills")
+				$data['searchPrimarySkills']=str_replace("-", " ", xss_clean($this->uri->segment(4)));
 		}
 		if(isset($_POST['location']))
 		{
@@ -499,7 +507,14 @@ class Job extends CI_Controller {
 			}
 			$data['searchIndustry'] = $industryId;
 		}
-		
+
+		if($data['searchPrimarySkills'] != '') {
+			$master_data['table_name']='skills';
+			$master_data['where']=' status=1 AND name="'.xss_clean($data['searchPrimarySkills']).'"';
+			$data['skills']=$this->Common_model->get_master($master_data);
+			if(isset($data['skills'][0]['id']))
+				$data['searchPrimarySkills'] = $data['skills'][0]['id']; 
+		}
 		if($data['searchJobType']!=''){
 
 			$master_data=array();

@@ -138,6 +138,13 @@ class Job_model extends CI_Model
                 $this->db->where('job.employer_id = ',$data['employer_id']);
             }
         }
+        if(isset($data['primary_skills']))
+        {
+            if($data['primary_skills']!='')
+            {
+                $this->db->where('skills = ',$data['primary_skills']);
+            }
+        }
         
         if(isset($data['skills']))
         {
@@ -285,7 +292,7 @@ class Job_model extends CI_Model
     }
     public function get_applied_jobs_for_approve()
     {
-        $this->db->select('employer.company_name,employee_email,employee_name,job_applied.id');
+        $this->db->select('employer.company_name,employee_email,employee_name,job_applied.id,job.job_title,job.job_location_id,employee.employee_city');
         $this->db->join('job','job.id=job_applied.job_id');
         $this->db->join('employer','employer.id=job.employer_id');
         $this->db->join('employee','employee.id=job_applied.user_id');

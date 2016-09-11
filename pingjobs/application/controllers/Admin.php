@@ -36,6 +36,7 @@ class Admin extends CI_Controller {
 			$master_data=array();
 			$master_data['table_name']=$table;
 			$master_data['where']=' status=1 ';
+			$master_data['order_by']=' name ';
 			$returnData[$table]=$this->Common_model->get_master($master_data);
 		}
 		return $returnData;
@@ -442,7 +443,7 @@ class Admin extends CI_Controller {
 					redirect(base_url()."job/listjobs");
 			}
 			$educationIDs = $this->Job_model->get_education_by_jobId(array($jobID));
-			$data['job'][0]['education']=$educationIDs[$jobID];
+			$data['job'][0]['education']=isset($educationIDs[$jobID]) ? $educationIDs[$jobID] : '';
 		}
 			
 		$data['update_url'] = base_url().'admin/jobadd_update';
@@ -653,6 +654,16 @@ class Admin extends CI_Controller {
 		$this->_checkAdmin();      
 		$data=array();
 		$list = $this->Job_model->get_applied_jobs_for_approve();
+		if(isset($list[0]))
+		{
+			$locations=$this->getLocation();
+			$locations=array_column($locations,"name","id");
+			foreach($list as $index=>$lists)
+			{
+				$list[$index]['job_location'] = $locations[$lists['job_location_id']];
+				$list[$index]['employee_city_name'] = $locations[$lists['employee_city']];
+			}
+		}
 		$data['list']=json_encode($list);
 		$this->_loadAdminView('job-applied-approve',$data);	
 	}
@@ -763,9 +774,11 @@ class Admin extends CI_Controller {
 		$record=array();
 	 	$master_data['table_name']='location';
 		$master_data['where']=' status=1 ';
+		$master_data['order_by']=' name ';
 		$data['location']=$this->Common_model->get_master($master_data);
 	 	$master_data['table_name']='education';
 		$master_data['where']=' status=1 ';
+		$master_data['order_by']=' name ';
 		$data['education']=$this->Common_model->get_master($master_data);
 
 		if(isset($_POST['search']))
@@ -820,6 +833,7 @@ class Admin extends CI_Controller {
 		$master_data['where']=' status !=3';
 		if($location > 0)
 			$master_data['where']=' id = '.$location;
+		$master_data['order_by']=' name ';
 		return $this->Common_model->get_master($master_data);
 	}
 	
@@ -839,6 +853,7 @@ class Admin extends CI_Controller {
 		$master_data=array();
 		$master_data['table_name']='education';
 		$master_data['where']=' status !=3';
+		$master_data['order_by']=' name ';
 		$record=$this->Common_model->get_master($master_data);		
 		$list=array();
 		foreach($record as $row)
@@ -857,6 +872,7 @@ class Admin extends CI_Controller {
 		$master_data=array();
 		$master_data['table_name']='functional';
 		$master_data['where']=' status !=3';
+		$master_data['order_by']=' name ';
 		$record=$this->Common_model->get_master($master_data);		
 		$list=array();
 		foreach($record as $row)
@@ -874,6 +890,7 @@ class Admin extends CI_Controller {
 		$master_data=array();
 		$master_data['table_name']='industry';
 		$master_data['where']=' status !=3';
+		$master_data['order_by']=' name ';
 		$record=$this->Common_model->get_master($master_data);		
 		$list=array();
 		foreach($record as $row)
@@ -892,6 +909,7 @@ class Admin extends CI_Controller {
 		$master_data=array();
 		$master_data['table_name']='skills';
 		$master_data['where']=' status <> 3';
+		$master_data['order_by']=' name ';
 		$record=$this->Common_model->get_master($master_data);
 		$list=array();
 		foreach($record as $row)
@@ -909,6 +927,7 @@ class Admin extends CI_Controller {
 		$master_data=array();
 		$master_data['table_name']='country';
 		$master_data['where']=' status !=3';
+		$master_data['order_by']=' name ';
 		$record=$this->Common_model->get_master($master_data);
 		$list=array();
 		foreach($record as $row)
@@ -926,11 +945,13 @@ class Admin extends CI_Controller {
 		$master_data=array();
 		$master_data['table_name']='country';
 		$master_data['where']=' status = 1 ';
+		$master_data['order_by']=' name ';
 		$data['country']=$this->Common_model->get_master($master_data);
 		
 		$master_data=array();
 		$master_data['table_name']='state';
 		$master_data['where']=' status <> 3';
+		$master_data['order_by']=' name ';
 		$record=$this->Common_model->get_master($master_data);
 		
 		$countries = array_column($data['country'], "name","id");
@@ -950,6 +971,7 @@ class Admin extends CI_Controller {
 		$master_data=array();
 		$master_data['table_name']='state';
 		$master_data['where']=' status = 1 ';
+		$master_data['order_by']=' name ';
 		$data['state']=$this->Common_model->get_master($master_data);
 	
 		$record=$this->getLocation();

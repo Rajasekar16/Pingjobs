@@ -3,13 +3,25 @@
 	<div class="container container-home home-cats">
 		<div class="row">
 			<div class="col-md-2 pad-ltrt-0 mar-rt-0">
-				<div class="home-aside" data-spy="affix" data-offset-top="185">
+				<div class="jobs-by home-aside" data-spy="affix" data-offset-top="185">
 				  <h3>Jobs by Location</h3>
 					<div class="box">
 					  <ul>
 						<?php foreach($location as $row) { ?>
 							<li>
 								<a href="<?php echo base_url(); ?>job/jobsearch/jobs-in/<?php echo strtolower($row['name']);?>">
+									<?php echo ucfirst($row['name']);?>
+								</a>
+							</li>
+						<?php } ?>
+					  </ul>
+					</div>
+				  <h3>Jobs by Skills</h3>
+					<div class="box">
+					  <ul>
+						<?php foreach($skills as $row) { ?>
+							<li>
+								<a href="<?php echo base_url(); ?>job/jobsearch/skills/<?php echo str_replace(" ","-",strtolower($row['name']));?>">
 									<?php echo ucfirst($row['name']);?>
 								</a>
 							</li>
@@ -58,7 +70,7 @@
 					<a href="<?php echo base_url(); ?>job/jobdetails/<?php echo @$job['job_name']; ?>">
 						<div class="panel-body border-1 pad-lt-0">
 							<div class="col-md-3">
-								<img src="./upload/logo/<?php echo $job['company_logo']; ?>" alt="" title="" width="100" />
+								<img src="./upload/logo/<?php echo $job['company_logo']; ?>" alt="Logo" title="Logo" width="100" />
 							</div>
 							<div class="col-md-9 pad-lt-0">
 								<div class="control-group">
@@ -95,7 +107,7 @@
 										Job Desecrition
 									</label>
 									<div class="controls col-md-8 pad-lt-0">
-										: <span class="help-inline"><?php echo $job['job_desc']; ?></span>
+										: <span class="help-inline"><?php echo (strlen($job['job_desc']) > 170 ) ? substr($job['job_desc'],0,170)."..." : $job['job_desc']; ?></span>
 									 </div>
 								</div>
 								<div class="clearfix"></div>
@@ -123,6 +135,13 @@
 						</p>
 					</form>
 				</div>
+				<div class="fb-like-page" data-spy="affix" data-offset-top="185">
+					<div class="fb-page" data-href="https://facebook.com/pingjobsforfreshersandexperience/" data-tabs="timeline" data-width="300" data-height="250" data-small-header="false" data-adapt-container-width="true" data-hide-cover="false" data-show-facepile="true">
+						<blockquote cite="https://facebook.com/pingjobsforfreshersandexperience/" class="fb-xfbml-parse-ignore">
+							<a href="https://facebook.com/pingjobsforfreshersandexperience/">Pingjobs</a>
+						</blockquote>
+					</div>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -145,6 +164,18 @@
 		var noResult = false;
 		var noOfJobs = $('#premiumJobs a').length;
 		function lazzyLoad() {
+			/*	
+			*  Let's not show all the jobs in home page. 
+			*  Let's make them to login to access all the jobs.
+			*  So let's have "POP-UP" saying kindly register to see more jobs after reaching 10 by scrolling.
+			*/
+			if(($("#employerLoginBtn").length || $("#employeeLoginBtn").length) && noOfJobs > 10)
+			{
+				loading = false;
+				$("#employeeLoginBtn").click();
+				$("#registerMessage").fadeIn().delay(5000).fadeOut();
+				return false;
+			}
 		    $.ajax({
 		      url	: "<?php echo base_url();?>?/login",
 		      data	: { 'csrf_token_name':document.forms[0].csrf_token_name.value, 'noOfJobs':noOfJobs },
@@ -160,6 +191,9 @@
 		        	var htmlContent = $("#jobDet").html();
 			        for(var y in data.jobs[x]) {
 			        	var jobs = data.jobs[x][y];
+			        	if (y == 'job_desc' && jobs.length > 170) {
+			        		jobs =  jobs.substring(0,170) + '...';
+			        	}
 			        	jobs = (y == 'company_logo') ? " src='./upload/logo/"+jobs+"' " : jobs;
 					    htmlContent = htmlContent.replace('{'+y+'}',jobs);
 			        }

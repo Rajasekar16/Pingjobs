@@ -68,6 +68,9 @@
        <div class="alert alert-danger" style="display:none">
         <strong>Error!</strong> The email/username and password you entered don't match .
       </div>
+       <div class="alert alert-info" id="registerMessage" style="display:none">
+        <strong>Attention!</strong> Kindly register / login to see more jobs.
+      </div>
       
           <div class="form-group">
               <input id="employee_email"  name="employee_email" type="email" placeholder="Enter Username" class="form-control input-md" required="required">
@@ -320,11 +323,11 @@
   </div>
 </div>
 
-
-
-
-
-
-
-
-    
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.7&appId=492622214084208";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>

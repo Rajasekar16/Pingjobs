@@ -16,11 +16,16 @@ class Common_model extends CI_Model
         $result=array();
         $table_name=$data['table_name'];
         $where=isset($data['where'])?$data['where']:'';
+        $order_by=isset($data['order_by'])?$data['order_by']:'';
         if($table_name!='')
         {
             if($where!='')
             {   
                 $this->db->where($where);
+            }
+            if($order_by!='')
+            {
+                $this->db->order_by($order_by);
             }
             $query=$this->db->get($table_name);
 

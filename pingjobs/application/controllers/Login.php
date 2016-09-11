@@ -33,10 +33,11 @@ class Login extends CI_Controller {
 		$limit = $this->input->post('noOfJobs');
 		//To get the employer
 		$master_data=array();
-		$master_data['premium_jobs']=' premium_jobs = 1';
+		//When posting the job If admin set premium jobs and enable the below comments
+		#$master_data['premium_jobs']=' premium_jobs = 1';
 		$master_data['orderby']='post_date';
 		$master_data['start']= ($limit) ? $limit : 0;
-		$master_data['limit']=1;
+		$master_data['limit']=($limit) ? 1 : 3;
 		$data['jobs']=$this->Job_model->get_jobs($master_data);
 		
 		if($limit) {
@@ -47,7 +48,14 @@ class Login extends CI_Controller {
 		$master_data=array();
 		$master_data['table_name']='location';
 		$master_data['where']=' status=1 ';
+		$master_data['order_by']=' name ';
 		$data['location']=$this->Common_model->get_master($master_data);
+		
+		$master_data=array();
+		$master_data['table_name']='skills';
+		$master_data['where']=' status=1 ';
+		$master_data['order_by']=' name ';
+		$data['skills']=$this->Common_model->get_master($master_data);
 		
 		//To get the employer
 		$master_data=array();

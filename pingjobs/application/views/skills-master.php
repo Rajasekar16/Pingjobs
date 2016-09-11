@@ -12,7 +12,7 @@
           <!-- <div class="col-md-4"><small><strong>48</strong> Clients Found</small></div> -->
           <ul class="nav navbar-nav navbar-right">
                 <li><a  data-toggle="modal" data-target="#addDialog"><i class="glyphicon glyphicon-plus"></i> Add Skills</a></li>
-                <li><a onclick="common_delete(3)" ><i class="glyphicon glyphicon-trash"></i> Delete</a></li>
+                <li><a onclick="common_delete(10)" ><i class="glyphicon glyphicon-trash"></i> Delete</a></li>
           </ul>
           <div class="clearfix"></div>
         </div> 

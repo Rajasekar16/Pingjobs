@@ -31,7 +31,7 @@
                   <tbody>
                     <tr>
                       <td>Job Description:</td>
-                      <td><?php echo $data['job_desc'];?></td>
+                      <td><pre class="job-desc"><?php echo $data['job_desc'];?></pre></td>
                     </tr>
                     <?php if($data['job_experience_from']): ?>
                     <tr>

@@ -878,7 +878,7 @@ function common_delete(tableId)
 			var id_json =JSON.stringify(delete_id_arr);
             $.ajax({
                 url:base_url+'common/deleteRecord',
-                data: {'ids':id_json,'tableId':tableId},
+                data: {'ids':id_json,'tableId':tableId,"csrf_token_name":document.forms[0].csrf_token_name.value},
                 dataType:'json',
                 method: 'POST',
                 beforeSend: function(){
@@ -1010,32 +1010,33 @@ function draw_jobs_ajax(data)
 		{
 			var iplus=i+1;
 			//var day_text = (data[i].days_ago_str == 0)?'Today':data[i].days_ago_str;
+			var jobDesc = data[i].job_desc;
+			if(jobDesc.length > 170)
+				jobDesc = jobDesc.replace(/(?:\r\n\r\n|\n\n|\r\r)/g,"<br>").substring(0,170)+"...<a href='javascript:;' onclick='$(\"#preview"+data[i].id+"\").toggle();$(\"#preview-more"+data[i].id+"\").toggle();'>More</a>";
 			output.push('<div class="emp-job-holder">\
                     <div class="col-md-12">\
                       <h3>'+Ucfirst(data[i].job_title)+'</h3>\
                       <p>'+Ucfirst(data[i].company_name)+'</p>\
                     </div>\
-                    <div class="col-md-7">\
+                    <div class="col-md-12">\
                     <table class="table emp-job-list-table borderless">\
                       <tbody>\
                         <tr>\
-                          <td>Location:</td>\
-                          <td>'+Ucfirst(data[i].location_name)+'</td>\
+                          <td class="col-md-2">Location:</td>\
+                          <td class="col-md-3">'+Ucfirst(data[i].location_name)+'</td>\
+                          <td class="col-md-2" rowspan="2">About Company:</td>\
+                          <td class="col-md-5" rowspan="2">'+(data[i].about_company)+'</td>\
                         </tr>\
                         <tr>\
                           <td>Keyskills:</td>\
                           <td>'+data[i].job_key_skill+'</td>\
                         </tr>\
                         <tr>\
-                          <td>Job Description:</td>\
-                          <td> '+Ucfirst(data[i].job_desc)+'</td>\
+                          <td class="col-md-2">Job Description:</td>\
+                          <td class="col-md-10" colspan="3"> <pre id="preview'+data[i].id+'">'+Ucfirst(jobDesc)+'</pre><pre id="preview-more'+data[i].id+'" style="display:none;">'+Ucfirst(data[i].job_desc)+'</pre></td>\
                         </tr>\
                       </tbody>\
                     </table>\
-                    </div>\
-                    <div class="col-md-5">\
-                      <h4>About Company</h4>\
-                      <p>'+(data[i].about_company)+'</p>\
                     </div>\
                     <div class="col-md-12 emp-job-buttons">\
                       <span class="emp-job-postedby">Posted by <strong>HR, '+data[i].days_ago_str+'</strong></span>\
@@ -1093,7 +1094,10 @@ function draw_applied_job_approve_header()
 					<th><input type="checkbox" class="checkheader" value="" ></th>\
 					<th>#</th>\
 					<th>Company Name <a onclick="sortData(\'company_name\',\'char\',draw_applied_job_approve)" class="glyphicon glyphicon-sort"></a></th>\
+					<th>Job Title </th>\
 					<th>Employee </th>\
+					<th>Candidate Location </th>\
+					<th>Job Location </th>\
 					<th>Action</th>\
 				</tr>');
 	output=output.join('');
@@ -1116,7 +1120,10 @@ function draw_applied_job_approve()
 							<td><input type="checkbox" class="checkitem" value="'+data[i].id+'" ></td>\
 							<td>'+iplus+'</td>\
 							<td>'+data[i].company_name+'</td>\
+							<td>'+data[i].job_title+'</td>\
 							<td>'+data[i].employee_name+'('+data[i].employee_email+')</td>\
+							<td>'+data[i].employee_city_name+'</td>\
+							<td>'+data[i].job_location+'</td>\
 							<td>'+approve+'</td>\
 						</tr>');
 		}

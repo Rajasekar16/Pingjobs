@@ -84,6 +84,7 @@ echo form_open('job/job_ajax',array('class'=>"form-horizontal","id"=>"searchJobs
         </div>
       </div>
     </div>
+    <input type="hidden" value="<?php echo $searchPrimarySkills;?>" id="postPrimarySkills"/>
     <input type="hidden" value="<?php echo $searchSkills;?>" id="postSkills"/>
     <input type="hidden" value="<?php echo $searchLocation;?>" id="postLocation"/>
     <input type="hidden" value="<?php echo $searchIndustry;?>" id="postIndustry"/>
@@ -128,6 +129,7 @@ echo form_open('job/job_ajax',array('class'=>"form-horizontal","id"=>"searchJobs
 	
 	function onLoad()
 	{
+	    var postPrimarySkills = dom.getElementById('postPrimarySkills').value;
 	    var skills = dom.getElementById('postSkills').value;
 	    var location = dom.getElementById('postLocation').value;
 	    var industry = dom.getElementById('postIndustry').value;
@@ -142,7 +144,7 @@ echo form_open('job/job_ajax',array('class'=>"form-horizontal","id"=>"searchJobs
 	    group_load = 0;
 	    $.ajax({
 	      url:base_url+"job/job_ajax",
-	      data : { 'employer_id':employerId, 'job_type':postJobsType, 'education':postEducation, 'csrf_token_name':csrfTokenName, 'group_no':group_load, 'get_total_group':1, 'orderby':orderby, 'skills':skills, 'location':location, 'industry':industry, 'experience':experience, 'last_days':last_days, 'salary':salary },
+	      data : { 'employer_id':employerId, 'job_type':postJobsType, 'primary_skills': postPrimarySkills, 'education':postEducation, 'csrf_token_name':csrfTokenName, 'group_no':group_load, 'get_total_group':1, 'orderby':orderby, 'skills':skills, 'location':location, 'industry':industry, 'experience':experience, 'last_days':last_days, 'salary':salary },
 	      type:'POST',
 	      dataType:'json',
 	      success:function(data){
@@ -156,6 +158,7 @@ echo form_open('job/job_ajax',array('class'=>"form-horizontal","id"=>"searchJobs
 	
 	function lazzyLoad()
 	{
+	    var postPrimarySkills = dom.getElementById('postPrimarySkills').value;
 	    var skills = dom.getElementById('postSkills').value;
 	    var location = dom.getElementById('postLocation').value;
 	    var industry = dom.getElementById('postIndustry').value;
@@ -169,7 +172,7 @@ echo form_open('job/job_ajax',array('class'=>"form-horizontal","id"=>"searchJobs
 	    var csrfTokenName = document.forms[0].csrf_token_name.value;
 	    $.ajax({
 	      url:base_url+"job/job_ajax",
-	      data : { 'employer_id':employerId,  'job_type':postJobsType, 'education':postEducation, 'csrf_token_name':csrfTokenName, 'group_no':group_load, 'orderby':orderby, 'skills':skills, 'location':location, 'industry':industry, 'experience':experience, 'last_days':last_days, 'salary':salary },
+	      data : { 'employer_id':employerId,  'job_type':postJobsType, 'primary_skills': postPrimarySkills, 'education':postEducation, 'csrf_token_name':csrfTokenName, 'group_no':group_load, 'orderby':orderby, 'skills':skills, 'location':location, 'industry':industry, 'experience':experience, 'last_days':last_days, 'salary':salary },
 	      type:'POST',
 	      dataType:'json',
 	      success:function(data){

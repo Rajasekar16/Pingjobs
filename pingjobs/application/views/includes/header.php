@@ -42,19 +42,22 @@ $(document).ready(function() {
   ?>
 	<header class="ping-header-new">
 		<div class="container">
+			<div class="row">&nbsp;</div>
+			<div class="row mobile-view-hide">&nbsp;</div>
+			<div class="row mobile-view-hide">&nbsp;</div>
+			<div class="row mobile-view-hide">&nbsp;</div>
 			<div class="row">
 				<div class="pingjobs-logo">
-					<div class="col-md-3">
+					<div class="col-md-7">
 						<a href="<?php  echo SITE_URL;?>">
-							<img src="<?php  echo SITE_URL;?>images/logo.png" class="img-polaroid">
+							<img src="<?php  echo SITE_URL;?>images/logo.png" title="PingJobs.com" alt="PingJobs.com" class="img-polaroid" />
 						</a>
-					</div>
-					<div class="col-md-4">
+						<span class="header-logo-title">No 1 Job Portal for Freshers and Experienced across India &amp; Overseas</span>
 					</div>
 					<div class="col-md-5">
 						<?php if(!$loggedin_employer && !$loggedin_user): ?>
-						<a class="btn btn-primary ping-btn-primary" data-toggle="modal" data-target="#employerlogin">Employer Login</a>
-						<a class="btn btn-primary ping-btn-primary" data-toggle="modal" data-target="#employeelogin">Employee Login</a>
+						<a class="btn btn-primary ping-btn-primary" data-toggle="modal" data-target="#employerlogin" id="employerLoginBtn">Employer Login</a>
+						<a class="btn btn-primary ping-btn-primary" data-toggle="modal" data-target="#employeelogin" id="employeeLoginBtn">Employee Login</a>
 						<?php elseif($loggedin_employer): ?>
 						<a class="btn btn-primary ping-btn-primary" href="<?php echo SITE_URL.'Employer/my_profile'; ?>">
 							<i class="glyphicon glyphicon-user"></i>
@@ -91,10 +94,13 @@ $(document).ready(function() {
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <!-- <a  href ="<?php echo  SITE_URL; ?>"class="navbar-brand">PING Jobs</a> -->
+          <a href ="<?php echo  SITE_URL; ?>" class="hide mobile-view-show navbar-brand">PING Jobs</a>
         </div>
         <div id="navbar" class="collapse navbar-collapse">
           <ul class="nav navbar-nav nav-margins">
+          	  <li class="<?php echo ($this->uri->segment(1)=='')?'active':''?>">
+          	  	<a href="<?php echo SITE_URL;?>"><i class="glyphicon glyphicon-home" style="font-size: 16px"></i> Home</a>
+          	  </li>
           	  <li class="<?php echo ($this->uri->segment(4)=='it')?'active':''?>">
           	  	<a href="<?php  echo SITE_URL;?>job/jobsearch/industry/it">IT Jobs</a>
           	  </li>
@@ -150,7 +156,7 @@ $(document).ready(function() {
               <!--<li><a data-toggle="modal" data-target="#employerlogin"><i class="glyphicon glyphicon-briefcase"></i> Employer Login</a></li>
               <li><a data-toggle="modal" data-target="#employeelogin"><i class="glyphicon glyphicon-user"></i> Employee Login</a></li>-->
             <?php }?> 
-             <li><a>&nbsp;</a></li>
+             <!-- <li><a>&nbsp;</a></li> -->
             </ul>
         </div>
       </div>
