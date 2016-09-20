@@ -444,6 +444,9 @@ class Admin extends CI_Controller {
 			}
 			$educationIDs = $this->Job_model->get_education_by_jobId(array($jobID));
 			$data['job'][0]['education']=isset($educationIDs[$jobID]) ? $educationIDs[$jobID] : '';
+			
+			$locations = array_column($data['location'],"state_id","id");
+			$data['job'][0]['state_id']=$locations[$data['job'][0]['job_location_id']];
 		}
 			
 		$data['update_url'] = base_url().'admin/jobadd_update';
