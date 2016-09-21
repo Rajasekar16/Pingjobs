@@ -901,6 +901,10 @@ nav.affix {
 	margin-top:20px;
 	width:22%;
 }
+.panel .heading {
+	font-size:18px;
+	margin:0px;
+}
 /* For mobile only */
 @media screen and (max-width: 385px) {
   .ping-header-new .mobile-view-hide {

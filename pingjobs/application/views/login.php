@@ -74,15 +74,15 @@
 							</div>
 							<div class="col-md-9 pad-lt-0">
 								<div class="control-group">
-									<label class="control-label col-md-12 pad-lt-0">
+									<label class="control-label col-md-12 pad-lt-0 heading">
 										<?php echo $job['job_title']; ?>
 									</label>
 								</div>
-								<div class="control-group">
+								<!--<div class="control-group">
 									<div class="controls col-md-12 pad-lt-0">
 										<span class="help-inline"><?php echo $job['job_company_name']; ?></span>
 									 </div>
-								</div>
+								</div>-->
 								<div class="clearfix">&nbsp;</div>
 								<div class="control-group">
 									<label class="control-label col-md-4 pad-lt-0">
@@ -225,15 +225,15 @@
 				</div>
 				<div class="col-md-9 pad-lt-0">
 					<div class="control-group">
-						<label class="control-label col-md-12 pad-lt-0">
-							{job_title}
+						<label class="control-label col-md-12 pad-lt-0 heading">
+							<h3>{job_title}</h3>
 						</label>
 					</div>
-					<div class="control-group">
+					<!--<div class="control-group">
 						<div class="controls col-md-12 pad-lt-0">
 							<span class="help-inline">{job_company_name}</span>
 						 </div>
-					</div>
+					</div>-->
 					<div class="clearfix">&nbsp;</div>
 					<div class="control-group">
 						<label class="control-label col-md-4 pad-lt-0">
