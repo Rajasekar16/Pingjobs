@@ -15,3 +15,8 @@ ALTER TABLE `functional` CHANGE `id` `id` TINYINT(4) NOT NULL AUTO_INCREMENT;
 ALTER TABLE `education` CHANGE `id` `id` TINYINT(4) NOT NULL AUTO_INCREMENT;
 ALTER TABLE `designation` CHANGE `id` `id` TINYINT(4) NOT NULL AUTO_INCREMENT;
 ALTER TABLE `country` CHANGE `id` `id` TINYINT(4) NOT NULL AUTO_INCREMENT;
+
+ALTER TABLE ci_sessions DROP PRIMARY KEY,ADD PRIMARY KEY (id, ip_address);
+
+ALTER TABLE `employee` CHANGE `employee_current_salary` `employee_current_salary` VARCHAR(25) NOT NULL;
+ALTER TABLE `employee` CHANGE `employee_expected_salary` `employee_expected_salary` VARCHAR(25) NOT NULL;

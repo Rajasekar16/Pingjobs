@@ -155,7 +155,9 @@ class Employee  extends CI_Controller {
 				array( 'field' => 'employee_current_from_date','label' => 'employee_current_from_date', 'rules'=> 'trim|xss_clean' ),
 				array( 'field' => 'employee_current_to_date','label' => 'employee_current_to_date', 'rules'=> 'trim|xss_clean' ),
 				array( 'field' => 'employee_current_salary','label' => 'employee_current_salary', 'rules'=> 'trim|xss_clean' ),
+				array( 'field' => 'employee_current_salary_1','label' => 'employee_current_salary', 'rules'=> 'trim|xss_clean' ),
 				array( 'field' => 'employee_expected_salary','label' => 'employee_expected_salary', 'rules'=> 'trim|xss_clean' ),
+				array( 'field' => 'employee_expected_salary_1','label' => 'employee_expected_salary', 'rules'=> 'trim|xss_clean' ),
 				array( 'field' => 'employee_skills','label' => 'employee_skills', 'rules'=> 'trim|xss_clean' ),
 				array( 'field' => 'employee_notice','label' => 'employee_notice', 'rules'=> 'trim|xss_clean' ),
 				array( 'field' => 'employee_industry','label' => 'employee_industry', 'rules'=> 'trim|numeric|xss_clean' ),
@@ -200,10 +202,14 @@ class Employee  extends CI_Controller {
 		{
 			$data = $this->input->post();
 			$data['mode'] =trim($data['mode']);
+			$data['employee_current_salary'] .= ",".$data['employee_current_salary_1'];
+			$data['employee_expected_salary'] .= ",".$data['employee_expected_salary_1'];
 			unset($data['employee_state']);
 			unset($data['captcha']);
+			unset($data['employee_current_salary_1']);
+			unset($data['employee_expected_salary_1']);
 			$data['employee_current_from_date'] = date('Y-m-d',strtotime($data['employee_current_from_date']));
-			$data['employee_current_to_date'] = date('Y-m-d',strtotime($data['employee_current_to_date']));
+			$data['employee_current_to_date'] = ($data['employee_current_to_date'] == '') ? '' : date('Y-m-d',strtotime($data['employee_current_to_date']));
 			$success=$this->Employee_model->add_update($data);
 			if($success>0)
 			{

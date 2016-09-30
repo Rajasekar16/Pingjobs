@@ -192,21 +192,28 @@ if($year<1980){$employee_current_to_date = date('Y/m/d');}
                
 
 
-                <div class="form-group">
+                <div class="form-group required">
                     <label class="col-md-5 control-label" for="employee_exp_year">Period</label>  
-                    <div class="col-xs-5ths date_from_to">
-                      <input  class=" form-control input-md" type="text" placeholder="From" name ="employee_current_from_date"  id="fromdate"   value ="<?php echo date('m-d-Y',strtotime($employee_current_from_date)); ?>" >
+                    <div class="col-xs-5ths date_from_to" style="width:22%">
+                      <input  class=" form-control input-md" type="text" placeholder="From" required="required" name ="employee_current_from_date"  id="fromdate"   value ="<?php echo date('m-d-Y',strtotime($employee_current_from_date)); ?>" >
                     </div>
-                    <div class="col-xs-5ths date_from_to">
-                      <input  class=" form-control input-md" type="text" placeholder="To"  name ="employee_current_to_date" id="todate" value ="<?php echo date('m-d-Y',strtotime($employee_current_to_date)); ?>" >
+                    <div class="col-xs-5ths date_from_to till-now hide" style="width:22%">
+                      <input  class=" form-control input-md" type="text" placeholder="To" required="required" name ="employee_current_to_date" id="todate" value ="<?php echo date('m-d-Y',strtotime($employee_current_to_date)); ?>" >
                     </div>
+                    <label class="pull-left">
+                      	<input type="checkbox" onclick="$('.till-now').toggleClass('hide');$('#todate').val('<?php echo date('m/d/Y');?>');" <?php if($employee_current_to_date == date('Y/m/d')) echo 'checked="true"'; ?>>Till now
+                    </label>
                   </div>
-
 
               <div class="form-group">
                   <label class="col-md-5 control-label" for="employee_edu_basic" >Current Salary</label>
-                  <div class="col-md-7">
-                    <select id="employee_current_salary" name="employee_current_salary" class="form-control input-md">
+                  <div class="col-xs-5ths">
+                    <input id="employee_current_salary" name="employee_current_salary" placeholder="Lacs" class="form-control input-md" type="number"/>
+                  </div>
+                  <div class="pull-left">&amp;</div>
+                  <div class="col-xs-5ths">
+                    <input id="employee_current_salary_1" name="employee_current_salary_1" placeholder="Thousand" class="form-control input-md"  type="number" />
+                    <!-- <select id="employee_current_salary" name="employee_current_salary" class="form-control input-md">
                         <option value="">Select Salary</option>
                         <?php 
                         foreach($salary as $row)
@@ -219,14 +226,19 @@ if($year<1980){$employee_current_to_date = date('Y/m/d');}
                           ?>
                           <option   <?php echo $selected; ?> value="<?php echo $row['id']; ?>"><?php echo $row['name']; ?> </option>
                         <?php } ?>
-                    </select>
+                    </select> -->
                   </div>
                 </div>
 
                   <div class="form-group">
                   <label class="col-md-5 control-label" for="employee_edu_basic" >Expected Salary</label>
-                  <div class="col-md-7">
-                    <select id="employee_expected_salary" name="employee_expected_salary" class="form-control input-md">
+                  <div class="col-xs-5ths">
+                    <input id="employee_expected_salary" name="employee_expected_salary" placeholder="Lacs" class="form-control input-md">
+                  </div>
+                  <div class="pull-left">&amp;</div>
+                  <div class="col-xs-5ths">
+                    <input id="employee_expected_salary_1" name="employee_expected_salary_1" placeholder="Thousand" class="form-control input-md">
+                    <!-- <select id="employee_expected_salary" name="employee_expected_salary" class="form-control input-md">
                         <option value="">Select Salary</option>
                         <?php 
                         foreach($salary as $row)
@@ -239,7 +251,7 @@ if($year<1980){$employee_current_to_date = date('Y/m/d');}
                           ?>
                           <option <?php echo $selected; ?>  value="<?php echo $row['id']; ?>"><?php echo $row['name']; ?> </option>
                         <?php } ?>
-                    </select>
+                    </select> -->
                   </div>
                   <!-- <div class="col-md-1 pad-lt-0 text-right">
                     <a class="btn btn-default" onclick="add_master_education()" data-toggle="tooltip" data-placement="left" title="Add Master Education"><i id="add_master" class="glyphicon glyphicon-plus"></i></a>
@@ -247,18 +259,18 @@ if($year<1980){$employee_current_to_date = date('Y/m/d');}
                 </div>                  
 
                   <!-- Select Basic -->
-                  <div class="form-group">
+                  <div class="form-group required">
                     <label class="col-md-5 control-label" for="employee_skills">Key Skills</label>
                     <div class="col-md-7">
-                       <input type ="text" class="form-control" data-role="tagsinput"  name="employee_skills"  id="employee_skills" placeholder="Enter Key Skills" value ="<?php echo $employee_skills ;?>" />
+                       <input type ="text" class="form-control" required="required" data-role="tagsinput"  name="employee_skills"  id="employee_skills" placeholder="Enter Key Skills" value ="<?php echo $employee_skills ;?>" />
                     </div>
                   </div>
 
 
-                  <div class="form-group">
+                  <div class="form-group required">
                     <label class="col-md-5 control-label" for="textinput">Notice Period(Days)</label>  
                     <div class="col-md-7">
-                    <input id="employee_notice" name="employee_notice"  title="Notice period for only threee digit number"  
+                    <input id="employee_notice" name="employee_notice" required="required"  title="Notice period for only threee digit number"  
                        type="number" maxlength="3" placeholder="Enter Notice Period" class="form-control input-md number-only" value ="<?php  echo  $employee_notice; ?>" >
                       
                     </div>
@@ -502,6 +514,16 @@ if($year<1980){$employee_current_to_date = date('Y/m/d');}
                     </div>  
                   </div>
               </div>
+              <div class="col-md-12">
+                    <div class="col-md-5"></div>  
+                    <div class="col-md-7 pad-lt-0">
+		                <div class="fb-page" data-href="https://facebook.com/pingjobsforfreshersandexperience/" data-width="100" data-height="100" data-small-header="true" data-adapt-container-width="true" data-hide-cover="true" data-show-facepile="false">
+							<blockquote cite="https://facebook.com/pingjobsforfreshersandexperience/" class="fb-xfbml-parse-ignore">
+								<a href="https://facebook.com/pingjobsforfreshersandexperience/">Pingjobs</a>
+							</blockquote>
+						</div>
+					</div>
+				</div>
               <?php } ?>
 
               <div class="clearfix"></div>
@@ -521,8 +543,6 @@ if($year<1980){$employee_current_to_date = date('Y/m/d');}
         
       </div>
     </div>
-
-
 
 <?php echo $footer; ?>
 <script type="text/javascript">
@@ -573,8 +593,12 @@ function add_master_education()
 }
 function employee_validation()
 {
+	$("#employee_skills").show().valid();
 	if($('#employee-add-form').valid() == false)
+	{
+		setTimeout('$("#employee_skills").hide();',0);
 		return false;
+	}
 //alert($('#id').val());
   if( $('#id').val() >0)
   {    
